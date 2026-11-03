@@ -48,7 +48,8 @@ def inspect_pull_request(repo, number, *, fetch=None):
     fetch is an injectable URL->JSON function for no-network tests. Failures
     propagate and must be treated as STOP; stale cached snapshots are unsafe.
     """
-    if type(repo) is not str or not _REPO.fullmatch(repo):
+    if (type(repo) is not str or not _REPO.fullmatch(repo)
+            or any(segment in (".", "..") for segment in repo.split("/"))):
         raise ValueError("Invalid repository owner/name")
     if type(number) is not int or not 1 <= number <= 1_000_000:
         raise ValueError("Invalid PR number")
