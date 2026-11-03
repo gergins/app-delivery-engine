@@ -6,8 +6,8 @@
 
 | Need | Existing authoritative document | Current reality |
 | --- | --- | --- |
-| Get a useful app running | [README quick start](../README.md), [Delivery usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) | Existing local web-list UI/API/SQLite generator, not production |
-| Start an application idea | [Bootstrap continuity](BOOTSTRAP-CONTINUITY-M1.md), [AGENTS](../AGENTS.md) | Offline requirements-first starter, not a working VRS or online repo creator |
+| Get a useful app running | [README quick start](../README.md), [Delivery usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) | Existing local web-list UI/API/SQLite generator; opt-in unified starter for low-risk tasks, not production |
+| Start an application idea | [Bootstrap continuity](BOOTSTRAP-CONTINUITY-M1.md), [AGENTS](../AGENTS.md) | Requirements-first starter, with optional generic runnable web-list for low-risk briefs; no working VRS or online repo creator |
 | Resume a lost/interrupted session | [Continuity & next work](CONTINUITY-NEXT-WORK-V1.md), [Handoff](HANDOFF.md) | Offline startup, read-only GitHub API lookup (with second HEAD check), snapshot reconciliation and advisory selector; no atomic attestation or full review/issue integration |
 | Choose engineering methods | [Method selection](METHOD-SELECTION-V1.md), [Senior engineer contract](SENIOR-ENGINEERING-CONTRACT-V1.md) | Advisory risk-specific method only |
 | Choose architecture, interfaces, commands | [Architecture](DELIVERY-ENGINE-ARCHITECTURE-V1.md), [command registry](../registry/commands.json) | Most unified commands/adapters remain design proposals |
@@ -22,7 +22,7 @@ The chain to prove is **brief → owner-accepted requirement → bounded runnabl
 | Link | Existing mechanism | Evidence still needed / gap |
 | --- | --- | --- |
 | Brief to scope | bootstrap strict JSON | Product owner accepts measurable requirement and non-goals |
-| Scope to runnable app | separate web-list generator | Unified opt-in path with bootstrap, *without* hidden scope changes |
+| Scope to runnable app | opt-in unified bootstrap + web-list demo | Product-specific UI beyond generic list, and fresh-human usability still unproven |
 | Runnable app to tests | synthetic HTTP/SQLite/browser exercises | Fresh contributor usability, keyboard/a11y assessment, negative failures |
 | Tests to trusted evidence | pinned Actions + SHA assertion | Workflow success for the **current** candidate HEAD, job logs, trustworthy source linkage |
 | Evidence to review | AGENTS/contract and PR | Real reviewer identity and approvals; not a fabricated JSON boolean |
