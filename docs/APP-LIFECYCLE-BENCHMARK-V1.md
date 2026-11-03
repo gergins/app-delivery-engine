@@ -58,7 +58,7 @@ Therefore **do not build an autonomous end-to-end production factory yet**. Prov
 
 ## How to benchmark without building the whole engine
 
-Run **two different application archetypes**, first Camping Booking (transactional, OIDC, tenant data) and a second independent app (e.g. a content/admin or scheduling product). For each, assess staged evidence with:
+Run **two different application archetypes**, starting with the [Camping Booking evidence scorecard](BENCHMARK-CAMPING-BASELINE-V1.md). First Camping Booking (transactional, OIDC, tenant data) and a second independent app (e.g. a content/admin or scheduling product). For each, assess staged evidence with:
 - `PASS`: real artifacts and exact HEAD tests support the stage.
 - `PARTIAL`: bounded slice passes but materially important functions, platforms or negative paths remain.
 - `BLOCKED`: unresolved security, identity, approvals, dependencies or infrastructure.
