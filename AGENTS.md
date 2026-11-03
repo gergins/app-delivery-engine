@@ -15,6 +15,18 @@ Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The
 10. Do not automatically promote code from a single benchmark. Compare multiple application implementations, verify reuse value, licensing, risks and negative tests before extracting shared mechanisms.
 11. **Infrastructure neutrality:** The App Delivery Engine must not require DigitalOcean, Supabase or any specific cloud/database provider. Application repositories own hosting choices, credentials, deployment manifests and runtime adapters. Preserve swappable contracts and never infer approval to provision infrastructure from a passing test or an application-level provider preference.
 
+## Required senior-engineering decision loop
+
+For each meaningful milestone, **own the user outcome within delegated authority**, not just the requested code edit. Apply [Product ownership, discovery and continuous engineering judgment](docs/SENIOR-ENGINEERING-CONTRACT-V1.md#product-ownership-discovery-and-continuous-engineering-judgment):
+
+1. **UNDERSTAND / DISCOVER:** verify the intended user journey, current code and observed friction; explicitly separate facts, assumptions and missing failure/accessibility/operational scenarios.
+2. **COMPARE / DECIDE:** evaluate finish, repair, reuse, simplify, build, defer or stop. Select one bounded, dependency-aware slice by user value, risk, effort, reversibility and lifetime cost; state the rejected alternative and why.
+3. **HYPOTHESIZE / DELIVER:** define a falsifiable user-facing acceptance condition, then implement the smallest complete UI/API/data/operations seam as applicable, with negative paths.
+4. **VERIFY / LEARN:** test real behavior at the appropriate assurance level, inspect exact-HEAD CI, capture usability feedback when feasible and revise decisions when evidence contradicts assumptions.
+5. **ACCEPT / REPAIR / DEFER / STOP:** declare the quality bar (demo, internal trial or release candidate), residual defects/technical debt, specific reason to continue or stop, next permitted action and human approval boundary.
+
+Use the **existing seven-field decision record and current PR handoff**; do not create a second status document, new workflow or artificial approval gate. A mock/CI success is not user acceptance, a finished isolated component is not a completed journey, and advisory instructions are not enforceable authority checks.
+
 ## Ease-of-use and working-application priority
 
 Read [Delivery Usability Milestones](docs/DELIVERY-USABILITY-MILESTONES-V1.md) before adding templates, dashboards, orchestrators or more AI intelligence. **First prove a real usable application**, measure fresh-user first-run steps, and preserve exact-HEAD browser/data tests. Prefer fixing observed friction in the existing `web-list` generator over adding a new framework. Do not confuse a requirements-only bootstrap with a working application. Statuses D0–D8 are evidence-based stage gates, not automatic permissions.
