@@ -219,6 +219,40 @@ class BrowserTests(unittest.TestCase):
                 server.server_close()
                 thread.join(timeout=2)
 '''
+    browser = browser.replace(
+        "    def test_browser_to_api_to_sqlite_and_reload(self):",
+        '''    def test_keyboard_only_access_and_narrow_viewport(self):
+        from playwright.sync_api import sync_playwright
+        with tempfile.TemporaryDirectory() as tmp:
+            server = make_server(str(Path(tmp) / "data.sqlite3"))
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                with sync_playwright() as p:
+                    browser = p.chromium.launch(headless=True)
+                    try:
+                        page = browser.new_page(viewport={"width": 375, "height": 700})
+                        page.goto("http://127.0.0.1:" + str(server.server_port))
+                        self.assertEqual(page.get_by_role("heading", level=1).count(), 1)
+                        page.keyboard.press("Tab")
+                        self.assertEqual(page.locator(":focus").get_attribute("id"), "item")
+                        page.keyboard.type("keyboard entry")
+                        page.keyboard.press("Tab")
+                        self.assertEqual(page.locator(":focus").inner_text(), "Add")
+                        page.keyboard.press("Enter")
+                        page.get_by_role("status").get_by_text("Item saved").wait_for()
+                        self.assertEqual(page.locator("#items li").first.inner_text(), "keyboard entry")
+                        self.assertEqual(page.locator(":focus").get_attribute("id"), "item")
+                        self.assertFalse(page.evaluate(
+                            "document.documentElement.scrollWidth > window.innerWidth"))
+                    finally:
+                        browser.close()
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=2)
+
+    def test_browser_to_api_to_sqlite_and_reload(self):''')
     return {
         "app/__init__.py": "",
         "app/server.py": server,
