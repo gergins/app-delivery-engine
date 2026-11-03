@@ -73,9 +73,9 @@ For a reviewed **low-risk general/offline-tasks** brief, use the explicit opt-in
 python -m ade.bootstrap_cli plan examples/offline-list-brief.json --working-web-list
 python -m ade.bootstrap_cli create examples/offline-list-brief.json /tmp/my-project --working-web-list
 cd /tmp/my-project
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -p test_app.py -v
 python tools/startup.py     # Expected STOP until the product scope is approved
 python -m app.server        # Runs ONLY the local generic list demo
 ```
 
-Open http://127.0.0.1:8000. The `AGENTS.md`, requirements, decisions, risks and continuity files coexist with the runnable UI/API/SQLite demonstration. A STOP from startup is a **correct approval outcome** and does not block manual inspection of the local demonstration. The profile must not be used to pretend VRS, payments, multi-tenant booking or other high-risk domain logic is implemented. The existing default bootstrap remains requirements-only. A fresh-human usability benchmark and authorized live cross-repo recovery test remain incomplete.
+Open http://127.0.0.1:8000. Chromium browser regressions are installed and run in the generated project's GitHub CI, not required for the dependency-free local API smoke test. The `AGENTS.md`, requirements, decisions, risks and continuity files coexist with the runnable UI/API/SQLite demonstration. A STOP from startup is a **correct approval outcome** and does not block manual inspection of the local demonstration. The profile must not be used to pretend VRS, payments, multi-tenant booking or other high-risk domain logic is implemented. The existing default bootstrap remains requirements-only. A fresh-human usability benchmark and authorized live cross-repo recovery test remain incomplete.
