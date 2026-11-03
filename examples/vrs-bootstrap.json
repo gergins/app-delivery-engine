@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "slug": "vrs-application-benchmark",
+  "title": "VRS Application — Requirements Starter",
+  "problem": "Deaf callers need reliable accessible connection to qualified interpreters and hearing parties using a regulated video relay workflow.",
+  "users": [
+    "Deaf caller",
+    "Interpreter",
+    "Operations supervisor",
+    "Service authority"
+  ],
+  "outcome": "Define and validate a minimal accessible three-party call journey with independently reviewed queue, session, media and telecom boundaries before any public relay service.",
+  "domain": "vrs",
+  "risks": [
+    "identity",
+    "personal-data",
+    "external-provider",
+    "concurrency",
+    "public-exposure"
+  ]
+}
