@@ -2,9 +2,8 @@
 
 Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The repository and existing draft PR are authoritative; past conversations are not.
 
-1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/METHOD-SELECTION-V1.md`, active PR and CI evidence before editing.
-2. Read [Senior Engineering Operating Contract v1](docs/SENIOR-ENGINEERING-CONTRACT-V1.md), including the **observable pragmatic staff-engineer traits and seven-field decision record**: assess architecture, tradeoffs, overlooked risks, tests, operations, user outcomes and clean handoffs; do not equate a green test with readiness.
-   Before claiming any idea-to-release capability, read [Application Lifecycle Benchmark v1](docs/APP-LIFECYCLE-BENCHMARK-V1.md), classify the lifecycle stage and verify real artifacts/approval gates. A task-level method selector is not an end-to-end product lifecycle.
+1. **Start with the smallest relevant context:** inspect the active repository/branch/PR, changed code, applicable tests and current GitHub evidence. Use this file as the entry point; open the relevant sections of `README.md`, [documentation map](docs/INDEX.md), architecture or method guidance **only when the task depends on them**. Do not read every document for a trivial edit.
+2. Apply the [Senior Engineering Operating Contract v1](docs/SENIOR-ENGINEERING-CONTRACT-V1.md) proportional to the task: own the accepted user outcome, examine meaningful alternatives, test the complete relevant behavior and leave a verifiable handoff. Read the [Application Lifecycle Benchmark v1](docs/APP-LIFECYCLE-BENCHMARK-V1.md) for cross-stage, release or idea-to-delivery claims; task-level method selection alone is not lifecycle readiness.
 3. Select **one** bounded task kind and all known risks using `ade.method_selection.select_method`. This is a decision aid: unknown or disputed risks require human review, never automatic minimization.
 4. Compose the core delivery controls and the task/risk-specific controls; never pick a weaker methodology to save effort. Prefer minimal vertical slices, existing code/tests, deterministic generation and proven licensed mechanisms.
 5. Run positive, failure, security-boundary and relevant concurrency/restart tests. Verify source against exact commit SHA and complete GitHub Actions logs. Do not infer success without actual evidence.
@@ -26,6 +25,8 @@ For each meaningful milestone, **own the user outcome within delegated authority
 5. **ACCEPT / REPAIR / DEFER / STOP:** declare the quality bar (demo, internal trial or release candidate), residual defects/technical debt, specific reason to continue or stop, next permitted action and human approval boundary.
 
 Use the **existing seven-field decision record and current PR handoff**; do not create a second status document, new workflow or artificial approval gate. A mock/CI success is not user acceptance, a finished isolated component is not a completed journey, and advisory instructions are not enforceable authority checks.
+
+**Permission-aware autonomy:** within an already authorized work scope, inspect, reason, run disposable/synthetic local tests and propose focused repairs without repeatedly requesting approval for every harmless step. Before any mutation, confirm its scope and prior authorization. Do not infer authorization for repository creation, branch/PR changes outside the accepted scope, merging, deploying, spending, production secrets, external reviewers or protection changes. Unclear or consequential operations stop for the actual owner; a local PASS never grants new authority.
 
 ## Ease-of-use and working-application priority
 
