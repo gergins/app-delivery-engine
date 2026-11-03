@@ -22,12 +22,23 @@ def validate(spec):
         value = spec[key]
         if not isinstance(value, str) or not value.strip() or len(value) > 200 or any(ord(c) < 32 for c in value):
             raise ValueError("Invalid " + key)
-    if spec.get("profile", "cli") not in ("cli", "web-list"):\n        raise ValueError("Unsupported application profile")\n    return spec\n\n\ndef plan(spec):
+    if spec.get("profile", "cli") not in ("cli", "web-list"):
+        raise ValueError("Unsupported application profile")
+    return spec
+
+
+def plan(spec):
     """Return an inspectable file plan without writing anything."""
     spec = validate(spec)
-    manifest = {"schema_version": VERSION, "slug": spec["slug"], "profile": spec.get("profile", "cli"), "status": "scaffold-only",
-                "deployment": "not-configured"}
-    if spec.get("profile", "cli") == "web-list":\n        from .web_list import files as web_list_files\n        result = web_list_files(spec)\n        result["project-manifest.json"] = json.dumps({**manifest, "status": "local-web-benchmark"}, indent=2, sort_keys=True) + "\\n"\n        return result\n    core = '''"""Minimal application core. Replace with product behavior."""\n\ndef transform(value):\n    if not isinstance(value, str) or not value.strip():\n        raise ValueError("A non-empty string is required")\n    return value.strip()\n'''
+    manifest = {"schema_version": VERSION, "slug": spec["slug"], "profile": spec.get("profile", "cli"),
+                "status": "scaffold-only", "deployment": "not-configured"}
+    if spec.get("profile", "cli") == "web-list":
+        from .web_list import files as web_list_files
+        result = web_list_files(spec)
+        result["project-manifest.json"] = json.dumps(
+            {**manifest, "status": "local-web-benchmark"}, indent=2, sort_keys=True) + "\n"
+        return result
+    core = '''"""Minimal application core. Replace with product behavior."""\n\ndef transform(value):\n    if not isinstance(value, str) or not value.strip():\n        raise ValueError("A non-empty string is required")\n    return value.strip()\n'''
     test = '''import unittest\nfrom app.core import transform\n\nclass CoreTests(unittest.TestCase):\n    def test_valid(self):\n        self.assertEqual(transform(" hello "), "hello")\n\n    def test_invalid(self):\n        with self.assertRaises(ValueError):\n            transform("")\n'''
     return {
         "README.md": "# " + spec["title"] + "\n\n" + spec["outcome"] +
