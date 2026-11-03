@@ -1,0 +1,33 @@
+name: Verify application delivery baseline
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  generator-and-generated-app:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run generator tests
+        run: python -m unittest discover -s tests -v
+      - name: Generate and test application
+        run: |
+          sandbox="$(mktemp -d)"
+          python -m ade examples/demo.json "$sandbox/generated"
+          (cd "$sandbox/generated" && python -m unittest discover -s tests -v)
+      - name: Verify exact commit
+        run: |
+          echo "Verified candidate: $GITHUB_SHA"
+          git rev-parse HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
