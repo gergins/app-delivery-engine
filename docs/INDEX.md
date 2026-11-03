@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Get a useful app running | [README quick start](../README.md), [Delivery usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) | Existing local web-list UI/API/SQLite generator, not production |
 | Start an application idea | [Bootstrap continuity](BOOTSTRAP-CONTINUITY-M1.md), [AGENTS](../AGENTS.md) | Offline requirements-first starter, not a working VRS or online repo creator |
-| Resume a lost/interrupted session | [Continuity & next work](CONTINUITY-NEXT-WORK-V1.md), [Handoff](HANDOFF.md) | Offline startup + pure GitHub response reconciliation/selector; no remote fetch/attestation integration yet |
+| Resume a lost/interrupted session | [Continuity & next work](CONTINUITY-NEXT-WORK-V1.md), [Handoff](HANDOFF.md) | Offline startup, read-only GitHub API lookup (with second HEAD check), snapshot reconciliation and advisory selector; no atomic attestation or full review/issue integration |
 | Choose engineering methods | [Method selection](METHOD-SELECTION-V1.md), [Senior engineer contract](SENIOR-ENGINEERING-CONTRACT-V1.md) | Advisory risk-specific method only |
 | Choose architecture, interfaces, commands | [Architecture](DELIVERY-ENGINE-ARCHITECTURE-V1.md), [command registry](../registry/commands.json) | Most unified commands/adapters remain design proposals |
 | Review complete application lifecycle | [Lifecycle benchmark](APP-LIFECYCLE-BENCHMARK-V1.md) | Acceptance/evidence gates documented, not automated end-to-end |
@@ -27,7 +27,7 @@ The chain to prove is **brief → owner-accepted requirement → bounded runnabl
 | Tests to trusted evidence | pinned Actions + SHA assertion | Workflow success for the **current** candidate HEAD, job logs, trustworthy source linkage |
 | Evidence to review | AGENTS/contract and PR | Real reviewer identity and approvals; not a fabricated JSON boolean |
 | App to preview | local HTTP server | Accessible, reproducible independent preview; no deployment implied |
-| Interruption to resume | generated startup + pure reconciliation | Live GitHub read adapter, branch/PR drift detection, stable work checkpoints |
+| Interruption to resume | generated startup + pure reconciliation | Read adapter now exists; cross-repo live CLI benchmark, reviews/issues, durable operation checkpoints still missing |
 | Resume to next slice | pure deterministic selector | Provenance-backed survey and comparisons across at least two apps |
 | Release candidate to operations | lifecycle documentation | App-specific backups, restore, rollback, threat model, cost, owner and human gate |
 
@@ -44,6 +44,6 @@ The chain to prove is **brief → owner-accepted requirement → bounded runnabl
 
 ## Next engineering milestone
 
-**P0:** Verify current draft PR CI; if failing, repair root cause. Integrate *read-only* GitHub PR/Actions fetching with snapshot reconciliation and next-work selection. Exercise interruption on Camping Booking and a different app. Record whether recovery chose the right next step and whether it avoided duplicate PRs. Until real GitHub fetch+integration is proven, call this **pure reconciliation contract**, not autonomous recovery.
+**P0:** Verify current draft PR CI; if failing, repair root cause. Verify read-only GitHub PR/Actions lookup and race detection in exact-HEAD CI; independently run CLI after interruption on Camping Booking and Community Picks. Compare results with connector observations, then select next work from issue/review evidence. Record whether recovery chose the right next step and whether it avoided duplicate PRs. The implemented GitHub lookup is a bounded, point-in-time read-only inspection—not an atomic GitHub state attestation or autonomous recovery.
 
 Do not create new documents or layers for merely synonymous concepts. Consolidate existing overlapping docs before building another interface.
