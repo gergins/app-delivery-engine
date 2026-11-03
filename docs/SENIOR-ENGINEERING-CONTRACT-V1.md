@@ -115,3 +115,26 @@ Read [Application Lifecycle Benchmark v1](APP-LIFECYCLE-BENCHMARK-V1.md) before 
 - If another agent or mode lacks GitHub/tool access, it must explicitly say which verification cannot be performed, and must not fabricate changes or results.
 
 **Not implemented yet:** an autonomous tech lead, software-enforced workflow checkpoints, semantic risk classification, comprehensive release assurance, human accountability delegation or independent signoff. This contract guides behavior; CI/review policies enforce only the controls that are actually configured.
+
+
+## Engineering collaboration v1 — focused challenge, not role theater
+
+**Objective:** improve the speed and correctness of consequential decisions, not maximize the number of agents, conversations or records. Reuse the seven-field decision record and current GitHub PR as the single durable evidence channel. This section does not create a new governance gate or executable orchestration capability.
+
+**Decision rights:** product owner controls product priorities and explicit approvals. Technical lead integrates architecture and makes ordinary delegated technical choices. Senior developer owns implementation and regression evidence. UX/accessibility, QA/reliability, security and operations contributors provide targeted challenge within their expertise. A specialist opinion does not override human review, policy or required independent authorization. One person or AI may simulate multiple perspectives for critique, but may not count that as independent examination.
+
+**Three escalation modes:** FAST (routine and reversible: implement/test); REVIEW (material trade-off: technical lead + senior + one or two relevant perspectives); COUNCIL (consequential or disputed: decision owner + only specialists with a distinct concern). Novel risks, release authority and actual independent review follow the pre-existing stop gates. A senior engineer should first ask whether consulting others changes the evidence or decision; if not, stay on FAST.
+
+**Compact exchange:**
+1. Frame the user outcome, failing path, verified code/CI facts, unknowns and risk level.
+2. Each invited perspective offers one materially different option or counterexample, with a testable assumption, not a generic endorsement.
+3. Compare repair, reuse, simplify, ship, defer and stop. Require a relevant objection (e.g., concurrency correctness or keyboard access), not ritual consensus.
+4. Technical lead names the selected bounded action, decision owner, rejected alternatives, reversibility and decisive evidence. Record material dissent and explicit blockers.
+5. Implement the smallest end-to-end proof; test positive/negative behavior and actual integration at the claimed level; verify exact commit and CI before asserting PASS.
+6. ACCEPT, REPAIR, DEFER or STOP in the existing record. Reopen only when new evidence changes material risk or user value.
+
+**Simplicity critic:** A DHH-inspired *published-principles* review may challenge premature abstraction, excess configuration, overplanning, meetings, and speculative infrastructure. Cite ideas accurately, keep them as a fictional analytical lens rather than claiming DHH is collaborating, and never allow simplicity to waive data integrity, privacy, accessibility, concurrency, recovery or security controls.
+
+**Measured trial — Camping Booking:** Against the current baseline, evaluate whether a targeted REVIEW results in a real browser-usable availability → reserve → confirmation → cancel path sooner and with less rework. Necessary tests include simultaneous conflicting reservations, authenticated ownership, persistence/restart, cancellation, failure states and accessibility. Synthetic migration rehearsal is evidence only for its scoped mapping, not an end-to-end booking proof. Compare time to decision, end-to-end pass rate, reopened decisions, PR churn, review overhead and defects. Where baseline measurements are unavailable, label outcomes *unmeasured*. Stop discussion when the next small reversible experiment is clear; do not add automation or another agent framework solely for this trial.
+
+**Rollback:** preserve the original Git commit/branch and review a diff before reverting any shared PR changes; prefer a forward revert of the specific collaboration edit, never force-reset a branch containing unrelated work.
