@@ -1,6 +1,6 @@
 # Recovery and Next-Best-Work Contract v1
 
-**Status:** bounded advisory implementation on draft PR #1. This is not an autonomous coding worker, a remote GitHub reconciler, or evidence of production readiness.
+**Status:** bounded read-only reconciliation, GitHub lookup CLI and advisory next-work selection on draft PR #1. This is not an autonomous coding worker, fully trusted attestation, or evidence of production readiness.
 
 ## Goal
 
@@ -33,7 +33,7 @@ Never put credentials or personal data in the checkpoint. Do not mark completion
 
 Security boundary and data integrity > recoverability > failing CI > blocked dependency > unfinished accepted slice > new slice > documentation > speculative optimization. Overrides require visible rationale and authorized owner, particularly for emergencies and high-risk changes. Prefer repair over additional features when the known state is unhealthy. No ready candidate means STOP and investigate rather than invent work.
 
-The current selector checks verified remote SHA format, exact tested SHA for claimed successful CI, recognized CI states, presence of an approval ledger, unique referenced candidate IDs, dependency readiness and a fail-closed gate for feature work while CI is failing. It does **not** query GitHub, assign risk by semantics, inspect code, authorize actions, or perform work. Invalid candidate input raises an error rather than silently downgrading risk.
+The read-only inspection command `python -m ade.github_readonly owner/repository PR_NUMBER` fetches the current PR and PR-triggered workflow metadata from GitHub's API (public access or caller-provided `GITHUB_TOKEN`). It refuses incomplete responses and cannot independently validate the user's authority or project scope. A CLI result is a point-in-time observation; re-check HEAD before any write. Do not persist or display the token. The selector checks verified remote SHA format, exact tested SHA for claimed successful CI, recognized CI states, presence of an approval ledger, unique referenced candidate IDs, dependency readiness and a fail-closed gate for feature work while CI is failing. It does **not** query GitHub, assign risk by semantics, inspect code, authorize actions, or perform work. Invalid candidate input raises an error rather than silently downgrading risk.
 
 ## Required interruption benchmarks
 
@@ -50,6 +50,6 @@ Acceptance: next contributor reconstructs the truthful current status, refuses s
 
 ## What to implement next
 
-Build the **read-only GitHub state reconciliation adapter** with fixture tests for HEAD drift, absent CI, untrusted claims and conflicting snapshots. Integrate its verified normalized snapshot with the pure selector, then prove one return-to-work scenario on Camping Booking and one on a different application. Only afterward consider write-enabled command execution, scheduling, or an admin dashboard.
+Verify exact-HEAD CI of the GitHub lookup/reconciliation tests, then prove a real return-to-work scenario on Camping Booking and Community Picks: fetch PR and complete CI evidence; verify unchanged HEAD, inspect reviews, issue dependencies and decisions, build candidates, and record the correct next action. The lookup does **not** retrieve job logs, issue priorities, branch protections, human permission or full review state. Those must be inspected separately before making a readiness claim. Only afterward consider any write-enabled execution, scheduling or an admin dashboard.
 
 No merge, deployment, account provisioning, paid infrastructure, production secrets or external reviewer access is authorized by this document.
