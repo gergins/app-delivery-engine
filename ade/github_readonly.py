@@ -74,6 +74,16 @@ def inspect_pull_request(repo, number, *, fetch=None):
     if result["total_count"] > len(runs):
         return {"decision": "STOP", "reason": "ci-results-incomplete",
                 "head_sha": head}
+    # Re-read current PR to catch a branch push during CI lookup. This is a
+    # read-only best-effort drift check, not a lock or atomic GitHub snapshot.
+    final_item = fetch(api + "/pulls/" + str(number))
+    if (type(final_item) is not dict or type(final_item.get("head")) is not dict
+            or final_item["head"].get("sha") != head):
+        return {"decision": "STOP", "reason": "head-changed-during-inspection",
+                "observed_head_sha": head}
+    if (final_item.get("state") != item.get("state")
+            or final_item.get("draft") != item.get("draft")):
+        return {"decision": "STOP", "reason": "pr-state-changed-during-inspection"}
     normalized = reconcile_github_snapshot(pr, runs, expected_head=head)
     if normalized.get("decision") == "RECONCILED":
         normalized["retrieval"] = "github-rest-read-only"
