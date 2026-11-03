@@ -98,8 +98,12 @@ if __name__=="__main__":
     raise SystemExit(2 if result["decision"]=="STOP" else 0)
 '''
 
-def plan_bootstrap(brief):
+def plan_bootstrap(brief, working_profile=None):
     risks=validate_brief(brief)
+    if working_profile not in (None, "web-list"):
+        raise ValueError("Unsupported working application profile")
+    if working_profile == "web-list" and (brief["domain"] not in ("general", "offline-tasks") or risks):
+        raise ValueError("Working web-list profile is only for low-risk general/offline tasks")
     selection=select_method("new-slice",risks)
     slug=brief["slug"]
     project={"schema_version":VERSION,"slug":slug,"title":brief["title"],
@@ -229,10 +233,34 @@ jobs:
           "Separate session lifecycle, queue fairness/assignment, presence, media routing and telephony boundaries.\n"+
           "Require scoped consent/privacy, audit redaction, reconnect, emergency handling, abuse protection and regional telecom/legal review.\n"+
           "No simulated signaling or browser-only call proves public carrier/PSTN service. Do not implement actual emergency routing without qualified legal/telecom review.\n")
+    if working_profile == "web-list":
+        # Compose the proven runnable profile without replacing the approved-
+        # scope gate or manufacturing a more powerful product implementation.
+        from .generator import plan as plan_working_app
+        app_files = plan_working_app({
+            "schema_version": VERSION, "slug": slug, "title": brief["title"],
+            "outcome": brief["outcome"], "profile": "web-list"})
+        for name, source in app_files.items():
+            if name in ("README.md", ".gitignore", "tests/__init__.py"):
+                continue
+            if name in docs:
+                raise ValueError("Generated file collision: " + name)
+            docs[name] = source
+        project["runtime_status"] = "local-demo-only"
+        docs["project.yaml"] = _json(project)
+        docs["README.md"] += (
+            "\\n## Optional runnable local demonstration\\n\\n"
+            "This is a generic list demonstration, not an approved implementation "
+            "of the requested business application. Scope remains **blocked**.\\n\\n"
+            "Run tests: `python -m unittest discover -s tests -v`\\n\\n"
+            "Run UI: `python -m app.server` and open "
+            "http://127.0.0.1:8000 on this machine.\\n"
+            "SQLite data belongs to this generated directory. "
+            "Do not publicly expose the server.\\n")
     return docs
 
-def bootstrap(brief,destination):
-    files=plan_bootstrap(brief)
+def bootstrap(brief,destination,working_profile=None):
+    files=plan_bootstrap(brief,working_profile=working_profile)
     destination=Path(destination)
     if destination.exists() or destination.is_symlink():
         raise FileExistsError("Never overwrite an existing repository")
