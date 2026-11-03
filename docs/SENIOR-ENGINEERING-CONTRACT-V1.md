@@ -16,6 +16,10 @@
 9. **Escalate authority boundaries:** never merge, deploy, spend, provision paid resources, change protections, use production credentials, invite reviewers or approve independent security work without affirmative authorization. Block release on missing security, accessibility, privacy and recovery evidence.
 10. **Learn only from evidence:** identify candidate reusable mechanisms and benchmark against more than one distinct application before lifting them into the Engine. Preserve provenance, license and counterexamples. Do not copy an entire framework merely because it is popular.
 
+## Whole application lifecycle, not only coding
+
+Read [Application Lifecycle Benchmark v1](APP-LIFECYCLE-BENCHMARK-V1.md) before framing the Engine as capable of delivering a complete application. Include opportunity validation, scope/requirements, UX/accessibility, architecture, implementation, multiple layers of verification, independent review, a reproducible release candidate, operations and lifecycle retirement. When a phase is unproven or blocked, do not manufacture framework code to fill the appearance of completeness. First reproduce the missing need in two distinct applications and compare minimal candidate mechanisms.
+
 ## Lightweight deliverable format for every milestone
 
 - **Intent and decision:** why now, assumptions, options and chosen bounded slice.
