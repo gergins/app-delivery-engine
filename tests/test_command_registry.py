@@ -19,7 +19,8 @@ class CommandRegistryTests(unittest.TestCase):
         self.assertEqual(len(ids),len(set(ids)))
         self.assertEqual(set(ids),{
             "repo.bootstrap.plan","repo.bootstrap.create",
-            "repo.scaffold.generate","repo.continuity.start","method.select"})
+            "repo.scaffold.generate","repo.continuity.start","method.select",
+            "continuity.next-work.recommend","continuity.github.reconcile"})
         for command in registry["commands"]:
             self.assertIn(command["effect"],{
                 "read-only","local-create-only","pure-function"})
