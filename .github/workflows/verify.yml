@@ -49,3 +49,8 @@ jobs:
           sandbox="$(mktemp -d)"
           python -m ade examples/web-list.json "$sandbox/generated"
           (cd "$sandbox/generated" && python -m unittest discover -s tests -p test_browser.py -v)
+      - name: Browser verify unified starter keyboard and data journey
+        run: |
+          sandbox="$(mktemp -d)"
+          python -m ade.bootstrap_cli create examples/offline-list-brief.json "$sandbox/unified" --working-web-list
+          (cd "$sandbox/unified" && python -m unittest discover -s tests -p test_browser.py -v)
