@@ -19,3 +19,7 @@ See the first milestone branch and draft PR for the generator, tests and deliver
 ## Method-selection v1 (advisory)
 
 Read [AGENTS.md](AGENTS.md) and [delivery method selection](docs/METHOD-SELECTION-V1.md) before using Work, Codex or another assistant to modify a product. `ade.method_selection.select_method(kind, risks)` composes the existing minimum delivery practice with task- and risk-specific verification controls and universal stop gates; no autonomous release or risk classification is claimed. Existing GitHub workflows and PR approvals remain the enforcement source. See the draft PR's exact-HEAD CI evidence before adoption.
+
+## Application lifecycle benchmark (idea to release-ready)
+
+[Application Lifecycle Benchmark v1](docs/APP-LIFECYCLE-BENCHMARK-V1.md) covers ideation, validation, requirements, architecture, implementation, tests, independent review, release candidacy, deployment decision and operations. It inventories repository failure/recovery/handoff scenarios and defines evidence gates for benchmarking two different apps. **This is a benchmark plan, not a completed autonomous production delivery engine.** Read [Senior Engineering Operating Contract](docs/SENIOR-ENGINEERING-CONTRACT-V1.md) for the decision and oversight style expected from Work/Codex.
