@@ -23,3 +23,14 @@ Examined the source on draft PR #1 in `gergins/app-delivery-engine`, its generat
 
 ## Stop criterion
 For M2, a passing exact-HEAD CI run with both original and web-list tests, two-app isolation tests, browser persistence test, and accurately documented limitations is sufficient. Stop expanding and seek separate approval before merge or deploy.
+
+## CI hardening follow-up (2026-11-03)
+
+Replaced floating action references in the existing `.github/workflows/verify.yml` without changing its test stages or permissions.
+
+- `actions/checkout@v7.0.1` resolved using the official GitHub tag to commit `3d3c42e5aac5ba805825da76410c181273ba90b1`.
+- `actions/setup-python@v7.1.0` resolved using the official GitHub tag to commit `6d4fd22b20465ccc0f7354476588e8df7c9ca0e0`.
+- Inspected both release `action.yml` files: both declare `runs.using: node24`.
+- Official release tags/references from the GitHub Actions repositories were read directly. Full independent supply-chain audit of those upstream source commits is **not claimed**.
+- Workflow still has read-only `contents: read`, disabled persistent checkout credentials, and an exact candidate HEAD assertion.
+- The test run on the new SHA must be checked separately. No merge/deployment is authorized.
