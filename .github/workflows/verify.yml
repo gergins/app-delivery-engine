@@ -12,13 +12,22 @@ jobs:
   generator-and-generated-app:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - name: Checkout
+      - name: Checkout exact candidate commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          persist-credentials: false
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Verify exact candidate SHA
+        run: |
+          echo "Candidate: $TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
       - name: Run generator tests
         run: python -m unittest discover -s tests -v
       - name: Generate and test application
@@ -26,8 +35,3 @@ jobs:
           sandbox="$(mktemp -d)"
           python -m ade examples/demo.json "$sandbox/generated"
           (cd "$sandbox/generated" && python -m unittest discover -s tests -v)
-      - name: Verify exact commit
-        run: |
-          echo "Verified candidate: $GITHUB_SHA"
-          git rev-parse HEAD
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
