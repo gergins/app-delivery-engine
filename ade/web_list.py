@@ -240,7 +240,7 @@ class BrowserTests(unittest.TestCase):
                         page.keyboard.press("Tab")
                         self.assertEqual(page.locator(":focus").inner_text(), "Add")
                         page.keyboard.press("Enter")
-                        page.get_by_role("status").get_by_text("Item saved").wait_for()
+                        page.get_by_role("status").filter(has_text="Item saved").wait_for()
                         self.assertEqual(page.locator("#items li").first.inner_text(), "keyboard entry")
                         self.assertEqual(page.locator(":focus").get_attribute("id"), "item")
                         self.assertFalse(page.evaluate(
