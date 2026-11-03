@@ -15,6 +15,19 @@ Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The
 10. Do not automatically promote code from a single benchmark. Compare multiple application implementations, verify reuse value, licensing, risks and negative tests before extracting shared mechanisms.
 11. **Infrastructure neutrality:** The App Delivery Engine must not require DigitalOcean, Supabase or any specific cloud/database provider. Application repositories own hosting choices, credentials, deployment manifests and runtime adapters. Preserve swappable contracts and never infer approval to provision infrastructure from a passing test or an application-level provider preference.
 
+## Mandatory bootstrap, continuity and ownership policy
+
+Read [Benchmark-to-Ownership Policy](docs/BENCHMARK-TO-OWNERSHIP-POLICY.md) before deciding to replace a dependency or promote product-specific code. Evidence must be recorded in `registry/benchmarks.json`, `registry/capabilities.json` and `registry/lessons.json` with real provenance; never assign independent approval to an AI.
+
+For a **new application idea**:
+1. Validate a strict brief and run `python -m ade.bootstrap_cli plan examples/vrs-bootstrap.json` (substitute a reviewed product brief). Do not create an actual GitHub repository or spend money without authorization.
+2. Run `python -m ade.bootstrap_cli create <approved-brief.json> <new-empty-local-directory>`. It must never overwrite existing files.
+3. Open the new `AGENTS.md`, `project.yaml`, `delivery/current-state.yaml`, decisions, risk register and acceptance criteria, then execute `python tools/startup.py`.
+4. A STOP is a valid safety outcome. Ask for explicit requirements approval before implementation. A local CONTINUE is only a preflight; GitHub HEAD/CI/review must be separately checked.
+5. Next independent Work/Codex/human contributor must repeat startup. No agent may edit delivery evidence to fake remote CI success, merge/deploy approvals or reviewer authority.
+
+Bootstrap is an **offline starter**, not a ready VRS implementation or an automated GitHub repository creator. Follow [Bootstrap & Continuity M1](docs/BOOTSTRAP-CONTINUITY-M1.md) and the senior engineering contract. Maintain provider neutrality and keep telecom/media implementations in app repositories.
+
 Current work: `gergins/app-delivery-engine`, draft PR #1, branch `feat/m0-minimal-app-delivery`; inspect current HEAD and CI for latest state.
 
 The senior engineering contract is advisory, not a substitute for CI, independent review or explicit authority. Continue to use the exact existing approval stop gates.
