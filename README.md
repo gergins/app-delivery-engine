@@ -16,6 +16,21 @@ A clean-sheet, evidence-led application delivery system.
 ## Development
 See the first milestone branch and draft PR for the generator, tests and delivery workflow.
 
+## Quick start: working web-list application (local only)
+
+This is the **runnable** path. It is distinct from the requirements-only bootstrap below. From an Engine checkout with Python 3.11:
+
+```bash
+python -m ade examples/web-list.json /tmp/my-first-list
+cd /tmp/my-first-list
+python -m unittest discover -s tests -p test_app.py -v
+python -m app.server
+```
+
+Open **http://127.0.0.1:8000** in a browser. Create an item, then stop the server with Ctrl+C, run `python -m app.server` again from the same generated directory, and check that the saved item remains. Do not delete that directory between starts: it contains the local SQLite data. Choose a different **new, nonexistent** output directory if `/tmp/my-first-list` already exists; generation intentionally refuses overwrite. On Windows PowerShell use a suitable local path such as `my-first-list` instead of `/tmp/my-first-list`.
+
+**Verify the complete path:** the Engine's GitHub Actions workflow also exercises Chromium browser interactions and SQLite persistence on disposable data. This is a development demonstration, not a hosted service, production-ready application, or independently measured onboarding. The new app is not automatically placed in its own GitHub repository. Read [Delivery Usability Milestones](docs/DELIVERY-USABILITY-MILESTONES-V1.md) for what remains unproven.
+
 ## Method-selection v1 (advisory)
 
 Read [AGENTS.md](AGENTS.md) and [delivery method selection](docs/METHOD-SELECTION-V1.md) before using Work, Codex or another assistant to modify a product. `ade.method_selection.select_method(kind, risks)` composes the existing minimum delivery practice with task- and risk-specific verification controls and universal stop gates; no autonomous release or risk classification is claimed. Existing GitHub workflows and PR approvals remain the enforcement source. See the draft PR's exact-HEAD CI evidence before adoption.
