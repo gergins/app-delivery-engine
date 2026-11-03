@@ -39,3 +39,7 @@ python -m unittest discover -s tests -v
 This builds no actual VRS signaling/media/telecom application, creates no GitHub repository, makes no network calls, and cannot grant permissions. It preserves the *decision and handoff contract*, not agent autonomy. See [Bootstrap & Continuity M1](docs/BOOTSTRAP-CONTINUITY-M1.md).
 
 **Ownership doctrine:** [Benchmark-to-Ownership Policy](docs/BENCHMARK-TO-OWNERSHIP-POLICY.md). Initial `registry/benchmarks.json`, `registry/capabilities.json` and `registry/lessons.json` contain provenance and explicit limitations. Remain dependent on mature external protocols and tools where replacing them brings no verified value; the Engine owns the process and contracts, not every implementation.
+
+## Make delivery genuinely easy
+
+[Guiding principles, delivery sequence and readiness criteria](docs/DELIVERY-USABILITY-MILESTONES-V1.md): benchmark the existing generated `web-list` app's first-run user experience, tests, SQLite persistence and browser journey. Measure commands, time, manual edits and handoff drift before introducing extra templates, dashboards or AI orchestrators. The working-app generator and requirements-only bootstrap are currently **separate capabilities**. Both are useful; the next evidenced design must reconcile them without pretending the product is release-ready.
