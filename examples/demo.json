@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0",
+  "slug": "demo-app",
+  "title": "Demo App",
+  "outcome": "Demonstrate a minimal deterministic application scaffold"
+}
