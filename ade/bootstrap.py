@@ -145,10 +145,10 @@ Resolve these in the App Delivery Engine's actual approved GitHub revision; refe
       "- [ ] Accept measurable outcomes and non-goals\n- [ ] Define one user-visible runnable vertical slice\n"+
       "- [ ] Define functional and nonfunctional acceptance tests\n- [ ] Review safety, privacy, accessibility, legal/regulatory exposure\n"+
       "- [ ] Assign decision and escalation owners\n")
-    risks_md="# Initial risk register — not approved\n\n"+mditems(
+    risks_md=("# Initial risk register — not approved\n\n"+mditems(
       ["**"+r+"** — identify owner, negative tests, incident/recovery controls and independent review where required" for r in risks] or
       ["No elevated risk flags supplied; verify this classification before implementation."])+
-      "\nRisks may only be narrowed after explicit review; a green unit test is not authorization.\n"
+      "\nRisks may only be narrowed after explicit review; a green unit test is not authorization.\n")
     docs={
       "AGENTS.md":ag,
       "project.yaml":_json(project),
