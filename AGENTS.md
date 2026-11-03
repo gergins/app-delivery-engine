@@ -52,3 +52,15 @@ Bootstrap is an **offline starter**, not a ready VRS implementation or an automa
 Current work: `gergins/app-delivery-engine`, draft PR #1, branch `feat/m0-minimal-app-delivery`; inspect current HEAD and CI for latest state. Read [the documentation map](docs/INDEX.md) and [recovery benchmark](docs/RECOVERY-CROSS-APP-EVIDENCE-V1.md) before expanding capabilities. Prefer verifying the existing recovery path and improving actual first-run usability over new orchestrators.
 
 The senior engineering contract is advisory, not a substitute for CI, independent review or explicit authority. Continue to use the exact existing approval stop gates.
+
+## Engineering collaboration v1 — select the smallest useful discussion
+
+Use the existing decision record and PR handoff; do **not** create an agent council, separate discussion service, meeting requirement, or additional approval authority. The accountable technical lead is the decision integrator within delegated scope, and the implementer remains responsible for verifiable results.
+
+- **FAST:** A bounded, reversible, understood edit with ordinary risks: senior engineer implements and verifies without convening roles.
+- **REVIEW:** Conflicting technical choices, a cross-component failure, or material user-facing uncertainty: senior engineer + technical lead + only the specialist relevant to the risk (such as UX/accessibility, QA/concurrency, security or operations). Get independent *perspectives*, not simulated independent signoff.
+- **COUNCIL:** Consequential architecture/product trade-off or unresolved conflicting recommendations: technical lead frames the problem and options, relevant specialists challenge assumptions, and the actual authorized owner decides anything beyond delegated authority. Stop at existing governance gates.
+
+Discussion contract: state observed facts and uncertainties; invite distinct falsifiable alternatives; compare smallest viable solution, user impact, correctness, reversibility, cost and evidence; name a single decision owner; record recommendation, dissent if material, decisive test and stop condition in the **existing seven-field record**. Timebox by decision sufficiency: if no new evidence emerges, stop debating and perform the lowest-risk reversible experiment or escalate. Never manufacture quotes from real engineers. A “DHH-inspired simplicity critique” is a perspective derived from published engineering principles, not participation, endorsement or security authority by David Heinemeier Hansson.
+
+On the Camping Booking trial, compare finishing one accessible availability → booking → confirmation → cancellation journey with spending further effort on generalized migration/architecture. Verify server-side conflict prevention under concurrent reservations, ownership, durable persistence, cancellation recovery, negative paths and browser use at the appropriate scope; defer unrelated payment/reporting work. Do not claim the journey or CI passed without tested exact-HEAD evidence. Measure whether the collaboration reduced decision turnaround or rework versus the ordinary path; remove it if it adds discussion overhead without observed benefit.
