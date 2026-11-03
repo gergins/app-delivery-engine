@@ -254,6 +254,7 @@ jobs:
             "          python -m pip install 'playwright==1.56.0'\n"
             "          python -m playwright install --with-deps chromium\n"
             "      - name: Unit verify continuity contract")
+        docs[".gitignore"] += "*.sqlite3\n"
         project["runtime_status"] = "local-demo-only"
         docs["project.yaml"] = _json(project)
         docs["README.md"] += (
