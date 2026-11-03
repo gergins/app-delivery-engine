@@ -246,13 +246,21 @@ jobs:
             if name in docs:
                 raise ValueError("Generated file collision: " + name)
             docs[name] = source
+        # Browser regressions require Playwright; install it explicitly in CI.
+        docs[".github/workflows/verify.yml"] = docs[".github/workflows/verify.yml"].replace(
+            "      - name: Unit verify continuity contract",
+            "      - name: Install Chromium dependencies\n"
+            "        run: |\n"
+            "          python -m pip install 'playwright==1.56.0'\n"
+            "          python -m playwright install --with-deps chromium\n"
+            "      - name: Unit verify continuity contract")
         project["runtime_status"] = "local-demo-only"
         docs["project.yaml"] = _json(project)
         docs["README.md"] += (
             "\\n## Optional runnable local demonstration\\n\\n"
             "This is a generic list demonstration, not an approved implementation "
             "of the requested business application. Scope remains **blocked**.\\n\\n"
-            "Run tests: `python -m unittest discover -s tests -v`\\n\\n"
+            "Local API tests: `python -m unittest discover -s tests -p test_app.py -v`\\n\\n"
             "Run UI: `python -m app.server` and open "
             "http://127.0.0.1:8000 on this machine.\\n"
             "SQLite data belongs to this generated directory. "
