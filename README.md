@@ -64,3 +64,18 @@ This builds no actual VRS signaling/media/telecom application, creates no GitHub
 ## Resume after an interruption
 
 Read [the recovery protocol](docs/CONTINUITY-NEXT-WORK-V1.md) and inspect the **live** GitHub PR HEAD, exact-HEAD workflow runs, review state, blockers and committed decisions. The pure `ade.github_reconcile.reconcile_github_snapshot` and `ade.continuity.recommend_next_work` helpers operate on caller-supplied objects; they do **not** fetch GitHub, authenticate evidence, change source files, or authorize actions. If the remote facts are unavailable or stale, stop and investigate instead of assuming success. The full verified delivery chain and explicit add-versus-defer criteria are in [docs/INDEX.md](docs/INDEX.md).
+
+## One project with both handoff documents and a working local demonstration
+
+For a reviewed **low-risk general/offline-tasks** brief, use the explicit opt-in working profile:
+
+```bash
+python -m ade.bootstrap_cli plan examples/offline-list-brief.json --working-web-list
+python -m ade.bootstrap_cli create examples/offline-list-brief.json /tmp/my-project --working-web-list
+cd /tmp/my-project
+python -m unittest discover -s tests -v
+python tools/startup.py     # Expected STOP until the product scope is approved
+python -m app.server        # Runs ONLY the local generic list demo
+```
+
+Open http://127.0.0.1:8000. The `AGENTS.md`, requirements, decisions, risks and continuity files coexist with the runnable UI/API/SQLite demonstration. A STOP from startup is a **correct approval outcome** and does not block manual inspection of the local demonstration. The profile must not be used to pretend VRS, payments, multi-tenant booking or other high-risk domain logic is implemented. The existing default bootstrap remains requirements-only. A fresh-human usability benchmark and authorized live cross-repo recovery test remain incomplete.
