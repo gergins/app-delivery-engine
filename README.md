@@ -23,3 +23,19 @@ Read [AGENTS.md](AGENTS.md) and [delivery method selection](docs/METHOD-SELECTIO
 ## Application lifecycle benchmark (idea to release-ready)
 
 [Application Lifecycle Benchmark v1](docs/APP-LIFECYCLE-BENCHMARK-V1.md) covers ideation, validation, requirements, architecture, implementation, tests, independent review, release candidacy, deployment decision and operations. It inventories repository failure/recovery/handoff scenarios and defines evidence gates for benchmarking two different apps. **This is a benchmark plan, not a completed autonomous production delivery engine.** Read [Senior Engineering Operating Contract](docs/SENIOR-ENGINEERING-CONTRACT-V1.md) for the decision and oversight style expected from Work/Codex.
+
+## Application Bootstrap & Continuity (M1 — offline benchmark)
+
+The Engine can generate a **requirements-first independent application repository starter**, including `AGENTS.md`, `project.yaml`, `delivery/current-state.yaml`, requirements, proposed ADR, risk register, acceptance plan, evidence/approvals, generated GitHub CI, and `tools/startup.py` for read-only agent entry checks.
+
+```bash
+python -m ade.bootstrap_cli plan examples/vrs-bootstrap.json
+python -m ade.bootstrap_cli create examples/vrs-bootstrap.json /tmp/my-vrs-starter
+cd /tmp/my-vrs-starter
+python tools/startup.py     # Expected STOP (2): scope is unapproved
+python -m unittest discover -s tests -v
+```
+
+This builds no actual VRS signaling/media/telecom application, creates no GitHub repository, makes no network calls, and cannot grant permissions. It preserves the *decision and handoff contract*, not agent autonomy. See [Bootstrap & Continuity M1](docs/BOOTSTRAP-CONTINUITY-M1.md).
+
+**Ownership doctrine:** [Benchmark-to-Ownership Policy](docs/BENCHMARK-TO-OWNERSHIP-POLICY.md). Initial `registry/benchmarks.json`, `registry/capabilities.json` and `registry/lessons.json` contain provenance and explicit limitations. Remain dependent on mature external protocols and tools where replacing them brings no verified value; the Engine owns the process and contracts, not every implementation.
