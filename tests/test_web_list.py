@@ -37,6 +37,21 @@ class WebListGeneratorTests(unittest.TestCase):
                                    cwd=dest, capture_output=True, text=True, timeout=30)
             self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
 
+    def test_two_independent_applications_from_distinct_specs(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a = Path(tmp) / "first"
+            b = Path(tmp) / "second"
+            spec_a = {**SPEC, "slug": "alpha", "title": "Alpha Picks"}
+            spec_b = {**SPEC, "slug": "beta", "title": "Beta Notes"}
+            self.assertNotEqual(plan(spec_a)["app/index.html"], plan(spec_b)["app/index.html"])
+            generate(spec_a, a)
+            generate(spec_b, b)
+            self.assertEqual(json.loads((a / "project-manifest.json").read_text())["slug"], "alpha")
+            self.assertEqual(json.loads((b / "project-manifest.json").read_text())["slug"], "beta")
+            self.assertIn("Alpha Picks", (a / "app/index.html").read_text())
+            self.assertIn("Beta Notes", (b / "app/index.html").read_text())
+            self.assertEqual((a / "app/server.py").read_bytes(), (b / "app/server.py").read_bytes())
+
     def test_no_overwrite(self):
         with tempfile.TemporaryDirectory() as tmp:
             dest = Path(tmp) / "app"
