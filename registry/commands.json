@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "note": "Inventory of genuinely available commands only. Planned commands are in architecture document, not advertised as executable.",
+  "commands": [
+    {
+      "id": "repo.bootstrap.plan",
+      "entrypoint": "python -m ade.bootstrap_cli plan <brief.json>",
+      "effect": "read-only",
+      "status": "verified-offline",
+      "authorization": "none",
+      "guarantee": "validated deterministic file plan; no writes"
+    },
+    {
+      "id": "repo.bootstrap.create",
+      "entrypoint": "python -m ade.bootstrap_cli create <brief.json> <new-empty-dir>",
+      "effect": "local-create-only",
+      "status": "verified-offline",
+      "authorization": "local destination already selected by caller",
+      "guarantee": "new directory only; no GitHub or cloud operations"
+    },
+    {
+      "id": "repo.scaffold.generate",
+      "entrypoint": "python -m ade <spec.json> <new-empty-dir>",
+      "effect": "local-create-only",
+      "status": "verified-offline",
+      "authorization": "local destination already selected by caller",
+      "guarantee": "minimal generated demo app, not production"
+    },
+    {
+      "id": "repo.continuity.start",
+      "entrypoint": "python tools/startup.py",
+      "effect": "read-only",
+      "status": "generated-per-application",
+      "authorization": "no approvals granted",
+      "guarantee": "local state validation only; no remote SHA or policy enforcement"
+    },
+    {
+      "id": "method.select",
+      "entrypoint": "ade.method_selection.select_method(kind, risks)",
+      "effect": "pure-function",
+      "status": "verified-offline",
+      "authorization": "none",
+      "guarantee": "advisory task kind and risk overlay; no semantic risk detection"
+    }
+  ]
+}
