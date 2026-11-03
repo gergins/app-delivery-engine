@@ -2,7 +2,9 @@
 
 A clean-sheet, evidence-led application delivery system.
 
-**Status:** Milestone 0 bootstrap only. All implementation work must happen on review branches, with tests and verified evidence before merge. This project is independent of earlier engineering systems.
+**Status:** early-stage delivery Engine, with implementation on draft review branches. The default branch does not necessarily contain the draft's working-app and continuity code. Always inspect the active PR and its exact-HEAD CI before claiming a capability is verified. No merge or deployment is implied.
+
+**Navigate:** [Documentation index and capability gap map](docs/INDEX.md) · [Interruption recovery and next work](docs/CONTINUITY-NEXT-WORK-V1.md) · [Registered executable operations](registry/commands.json).
 
 ## Principles
 - Reuse proven open-source mechanisms before inventing custom infrastructure.
@@ -58,3 +60,7 @@ This builds no actual VRS signaling/media/telecom application, creates no GitHub
 ## Make delivery genuinely easy
 
 [Guiding principles, delivery sequence and readiness criteria](docs/DELIVERY-USABILITY-MILESTONES-V1.md): benchmark the existing generated `web-list` app's first-run user experience, tests, SQLite persistence and browser journey. Measure commands, time, manual edits and handoff drift before introducing extra templates, dashboards or AI orchestrators. The working-app generator and requirements-only bootstrap are currently **separate capabilities**. Both are useful; the next evidenced design must reconcile them without pretending the product is release-ready.
+
+## Resume after an interruption
+
+Read [the recovery protocol](docs/CONTINUITY-NEXT-WORK-V1.md) and inspect the **live** GitHub PR HEAD, exact-HEAD workflow runs, review state, blockers and committed decisions. The pure `ade.github_reconcile.reconcile_github_snapshot` and `ade.continuity.recommend_next_work` helpers operate on caller-supplied objects; they do **not** fetch GitHub, authenticate evidence, change source files, or authorize actions. If the remote facts are unavailable or stale, stop and investigate instead of assuming success. The full verified delivery chain and explicit add-versus-defer criteria are in [docs/INDEX.md](docs/INDEX.md).
