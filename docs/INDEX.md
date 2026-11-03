@@ -31,6 +31,8 @@ The chain to prove is **brief → owner-accepted requirement → bounded runnabl
 | Resume to next slice | pure deterministic selector | Provenance-backed survey and comparisons across at least two apps |
 | Release candidate to operations | lifecycle documentation | App-specific backups, restore, rollback, threat model, cost, owner and human gate |
 
+**Documentation ownership and drift control:** `AGENTS.md` is the compact entry point and binding approval reminder; the [senior contract](SENIOR-ENGINEERING-CONTRACT-V1.md) owns engineering judgment; [usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) owns first-run and behavior evaluations; [method selection](METHOD-SELECTION-V1.md) owns risk overlays; GitHub PR/CI owns live evidence. Prefer links over repeating entire rule sets. Only promote a recurring, reproducible high-impact mistake into an executable check, with a negative/counterexample test and a maintainer; avoid another standalone process document.
+
 ## Senior-engineering decision rules
 
 1. **Inspect before inventing.** Check current code, PRs, CI logs and actual user journey. A failed test or unverified state outranks a new feature.
