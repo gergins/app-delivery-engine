@@ -11,5 +11,6 @@ Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The
 7. **Stop at governance gates.** Do not merge, deploy, publish, use production credentials, spend money, invite external reviewers, change branch protection/approval policy or bypass security checks without explicit authorization.
 8. Never claim mocked OAuth tests establish a live IdP, that a green unit test means production ready, or that a self-review is independent authority.
 9. Do not automatically promote code from a single benchmark. Compare multiple application implementations, verify reuse value, licensing, risks and negative tests before extracting shared mechanisms.
+10. **Infrastructure neutrality:** The App Delivery Engine must not require DigitalOcean, Supabase or any specific cloud/database provider. Application repositories own hosting choices, credentials, deployment manifests and runtime adapters. Preserve swappable contracts and never infer approval to provision infrastructure from a passing test or an application-level provider preference.
 
 Current work: `gergins/app-delivery-engine`, draft PR #1, branch `feat/m0-minimal-app-delivery`; inspect current HEAD and CI for latest state.
