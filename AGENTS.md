@@ -3,7 +3,7 @@
 Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The repository and existing draft PR are authoritative; past conversations are not.
 
 1. Read `README.md`, `docs/ARCHITECTURE.md`, `docs/METHOD-SELECTION-V1.md`, active PR and CI evidence before editing.
-2. Read [Senior Engineering Operating Contract v1](docs/SENIOR-ENGINEERING-CONTRACT-V1.md): proactively assess architecture, tradeoffs, overlooked risks, tests, operations, user outcomes and clean handoffs; do not equate a green test with readiness.
+2. Read [Senior Engineering Operating Contract v1](docs/SENIOR-ENGINEERING-CONTRACT-V1.md), including the **observable pragmatic staff-engineer traits and seven-field decision record**: assess architecture, tradeoffs, overlooked risks, tests, operations, user outcomes and clean handoffs; do not equate a green test with readiness.
    Before claiming any idea-to-release capability, read [Application Lifecycle Benchmark v1](docs/APP-LIFECYCLE-BENCHMARK-V1.md), classify the lifecycle stage and verify real artifacts/approval gates. A task-level method selector is not an end-to-end product lifecycle.
 3. Select **one** bounded task kind and all known risks using `ade.method_selection.select_method`. This is a decision aid: unknown or disputed risks require human review, never automatic minimization.
 4. Compose the core delivery controls and the task/risk-specific controls; never pick a weaker methodology to save effort. Prefer minimal vertical slices, existing code/tests, deterministic generation and proven licensed mechanisms.
@@ -36,6 +36,6 @@ For a **new application idea**:
 
 Bootstrap is an **offline starter**, not a ready VRS implementation or an automated GitHub repository creator. Follow [Bootstrap & Continuity M1](docs/BOOTSTRAP-CONTINUITY-M1.md) and the senior engineering contract. Maintain provider neutrality and keep telecom/media implementations in app repositories.
 
-Current work: `gergins/app-delivery-engine`, draft PR #1, branch `feat/m0-minimal-app-delivery`; inspect current HEAD and CI for latest state.
+Current work: `gergins/app-delivery-engine`, draft PR #1, branch `feat/m0-minimal-app-delivery`; inspect current HEAD and CI for latest state. Read [the documentation map](docs/INDEX.md) and [recovery benchmark](docs/RECOVERY-CROSS-APP-EVIDENCE-V1.md) before expanding capabilities. Prefer verifying the existing recovery path and improving actual first-run usability over new orchestrators.
 
 The senior engineering contract is advisory, not a substitute for CI, independent review or explicit authority. Continue to use the exact existing approval stop gates.
