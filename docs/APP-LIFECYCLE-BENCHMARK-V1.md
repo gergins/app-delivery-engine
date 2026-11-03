@@ -58,7 +58,7 @@ Therefore **do not build an autonomous end-to-end production factory yet**. Prov
 
 ## How to benchmark without building the whole engine
 
-Run **two different application archetypes**, starting with the [Camping Booking evidence scorecard](BENCHMARK-CAMPING-BASELINE-V1.md). First Camping Booking (transactional, OIDC, tenant data) and a second independent app (e.g. a content/admin or scheduling product). For each, assess staged evidence with:
+Run **two different application archetypes**, starting with the [Camping Booking evidence scorecard](BENCHMARK-CAMPING-BASELINE-V1.md) and [Life Services Hub evidence scorecard](BENCHMARK-LIFE-SERVICES-HUB-V1.md). First Camping Booking (transactional, OIDC, tenant data) and a second independent app (e.g. a content/admin or scheduling product). For each, assess staged evidence with:
 - `PASS`: real artifacts and exact HEAD tests support the stage.
 - `PARTIAL`: bounded slice passes but materially important functions, platforms or negative paths remain.
 - `BLOCKED`: unresolved security, identity, approvals, dependencies or infrastructure.
@@ -82,3 +82,7 @@ Select the lifecycle stage **and** task kind/risk using the current `ade.method_
 In every new conversation/Work/Codex session, open this document and `docs/SENIOR-ENGINEERING-CONTRACT-V1.md`, the relevant application's `AGENTS.md`, latest PR and CI. Then state: **current stage, actual status, risk flags, what evidence exists, what's missing, intended smallest next action, approval stop gates**. Do not restate a false completion claim from a prior chat.
 
 This specification is itself a **documented benchmark design**, not a validated end-to-end delivery capability. Promote to an enforced workflow only after cross-app evidence and explicit authorization.
+
+## What the first two archetypes taught us
+
+The second benchmark is not a second attempt to reproduce Camping Booking's backend: Life Services Hub demonstrates low-risk offline task CRUD with pure JS and Playwright, where mandatory OIDC/PostgreSQL would be a counterproductive method-selection error. Common practices are minimal runnable slice, explicit requirements/limits, domain tests, real browser workflow, exact PR evidence, and clear handoff. Authentication, cloud database, payments and external review are selected only when risk/goal warrants them. The Engine's current selector is still advisory and not a complete stage orchestrator. Do not replace this document with a score averaged across the two apps; blockers remain independently visible.
