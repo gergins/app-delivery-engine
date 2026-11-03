@@ -57,6 +57,16 @@ New `tests/test_first_run_benchmark.py` verifies the existing `web-list` profile
 
 The initial GitHub CI observation at `1974759d92345a714f67835d7d398022e47269e1` was **0.242 s measured inside the CI test** for generation plus two server starts, save and persistence; **9 files generated, 2 server starts, zero source edits**, and pass. This is an observed benchmark datapoint, not a guaranteed user timing, a whole setup/installation time or an independently validated UX score. Exact source logs: https://github.com/gergins/app-delivery-engine/actions/runs/41699536583 . Repeat on final HEAD and across fresh human/agent sessions before setting thresholds.
 
+## Unified starter fresh-session regression — 2026-11-03
+
+The opt-in `--working-web-list` low-risk starter now places continuity/requirements and a runnable UI/API/SQLite application in one generated project. An automated clean temporary-workspace benchmark exercises **plan → create → local API tests → startup STOP → server start → saved item → server restart → saved item recovered → startup STOP again**, with no generated Python/HTML/JS modifications. The generated `.gitignore` excludes SQLite databases to prevent accidental data commits.
+
+At source `b8f2a462548e0953afe1d7a16b4c18ddae947271`, [GitHub run 41709376560](https://github.com/gergins/app-delivery-engine/actions/runs/41709376560) passed **67 Engine tests**, 2 scaffold tests, 2 web-list API tests, 2 existing web-list browser tests and 2 new unified-starter browser tests. The synthetic first-run test logged 7 CLI/process invocations including two server starts, 0 manual edits, zero external network dependencies for its local HTTP path, successful persistence after restart, and a correct still-blocked scope approval gate. The logged **0.959 seconds** measures only automated execution of this harness; it excludes checkout, dependency installation, GitHub Actions setup and human thinking/reading time. The tests exercise keyboard-only form submission, focus restoration, ARIA status, labels and a 375px viewport in Chromium; these checks **do not** constitute WCAG conformance, assistive technology testing or a human accessibility evaluation.
+
+**Limit:** This is an automated fresh-workspace proxy run by the Engine's own CI, not a truly unfamiliar second agent or human. The exact number of external real-user steps, comprehension of the STOP message, actual screen reader usability, platform compatibility and independent handoff remain unverified. The synthetic process uses fixed local port 8000; a port conflict is a potential onboarding problem to test on a fresh machine.
+
+**Decision:** Stop adding first-run infrastructure now. The next useful evidence is a real independent first-run observation with only the README and example brief, capturing time to first saved item, confusing concepts, port conflicts, recovery and accessibility. Repair observed friction before adding CLI aliases or a dashboard. Live CLI recovery of private application PRs also requires explicitly authorized read-only credentials; do not add repository access just for benchmarking.
+
 ## Suggested first simplification (if benchmark exposes friction)
 
 Provide a concise task-oriented CLI:
