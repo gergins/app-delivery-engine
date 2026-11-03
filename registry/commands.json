@@ -57,6 +57,14 @@
       "status": "implemented-ci-unverified",
       "authorization": "advisory-only",
       "guarantee": "normalizes caller-fetched GitHub PR/Actions metadata, rejects stale/missing exact-HEAD CI; no GitHub network access or approval authority"
+    },
+    {
+      "id": "continuity.github.inspect",
+      "entrypoint": "python -m ade.github_readonly owner/repo PR_NUMBER",
+      "effect": "read-only",
+      "status": "implemented-ci-unverified",
+      "authorization": "read-only GitHub API; optional preconfigured GITHUB_TOKEN",
+      "guarantee": "fetches GitHub PR and pull-request Actions metadata only; stops on incomplete/failing evidence; no remote mutations, approval checking, or live lock"
     }
   ]
 }
