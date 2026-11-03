@@ -41,6 +41,14 @@
       "status": "verified-offline",
       "authorization": "none",
       "guarantee": "advisory task kind and risk overlay; no semantic risk detection"
+    },
+    {
+      "id": "continuity.next-work.recommend",
+      "entrypoint": "ade.continuity.recommend_next_work(snapshot, candidates)",
+      "effect": "pure-function",
+      "status": "implemented-ci-unverified",
+      "authorization": "advisory-only",
+      "guarantee": "fail-closed deterministic recommendation from caller-supplied remote-verified snapshot; does not fetch GitHub or authorize actions"
     }
   ]
 }
