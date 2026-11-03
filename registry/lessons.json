@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "records": [
+    {
+      "id": "pg-exclusion-deadlock",
+      "observed_in": "gergins/camping-booking",
+      "evidence": "https://github.com/gergins/camping-booking/actions/runs/41688734587",
+      "finding": "Two direct PostgreSQL exclusion-constrained writes may produce SQLSTATE 40P01 instead of ExclusionViolation",
+      "response": "Treat aborted competing transaction as failure; design bounded transaction-level retries in production",
+      "promotion": "candidate-not-universal"
+    },
+    {
+      "id": "real-protocol-vs-mock",
+      "observed_in": "gergins/camping-booking",
+      "evidence": "https://github.com/gergins/camping-booking/actions/runs/41683633511",
+      "finding": "Mock OIDC tests cannot validate real provider exchange and signed-token processing",
+      "response": "Preserve mock unit tests plus disposable real protocol integration stage; still require hardened deployment review",
+      "promotion": "risk-specific"
+    },
+    {
+      "id": "do-not-force-platform",
+      "observed_in": "gergins/live-services-hub",
+      "evidence": "https://github.com/gergins/live-services-hub/actions/runs/41337482878",
+      "finding": "Offline task demo achieves working user journey without mandatory PostgreSQL, Keycloak or cloud",
+      "response": "Select architecture/verification proportional to domain and release risk",
+      "promotion": "cross-app-principle"
+    }
+  ]
+}
