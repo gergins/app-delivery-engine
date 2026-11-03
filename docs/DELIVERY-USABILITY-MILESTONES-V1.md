@@ -31,7 +31,7 @@
 | D7 — optional interfaces | Read-only dashboard, IDE/agent interface or workflow automations | Proven reduction in confusion/rework without duplicate status implementation |
 | D8 — controlled automation | Trusted worker identity, policy, budgets, idempotency, cancellation/recovery | Security and operations independently reviewed; explicit action approvals still enforced |
 
-**Status on 2026-11-03:** D0 has inspectable code and CI; D1 has an automatically tested browser/HTTP/SQLite **web-list benchmark**, but usability with a fresh human/agent is not yet measured; D2–D8 not claimed complete. Bootstrap M1 is a *requirements-only starter*, not yet the integrated working app.
+**Status on 2026-11-03:** D0/D1 have inspectable code and passing synthetic UI/API/SQLite CI; D2/D3 now have an **opt-in unified runnable local demo plus continuity documentation**, verified through a fresh temporary-workspace automated test. Independent human/agent onboarding has **not** been measured, so full D2 usability acceptance is outstanding. D4–D8 remain incomplete. The default bootstrap remains requirements-only.
 
 ## Ease-of-use benchmark (small and falsifiable)
 
