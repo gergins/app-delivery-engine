@@ -164,15 +164,20 @@ Resolve these in the App Delivery Engine's actual approved GitHub revision; refe
       "delivery/evidence.json":_json({"tested_sha":None,"ci_conclusion":None,"workflow_url":None,"reviewer":None}),
       "delivery/method-selection.json":_json(selection),
       "tools/startup.py":STARTUP_SCRIPT,
-      "tests/test_startup.py":'''import unittest
+      "tests/test_startup.py":'''import json
+import unittest
 from pathlib import Path
 from tools.startup import inspect
 
 class StartupTests(unittest.TestCase):
-    def test_new_repository_stops_at_requirements_gate(self):
-        result=inspect(Path(__file__).resolve().parents[1])
-        self.assertEqual(result["decision"],"STOP")
-        self.assertEqual(result["reason"],"approval-or-requirements-gate")
+    def test_startup_matches_checked_in_state(self):
+        root=Path(__file__).resolve().parents[1]
+        result=inspect(root)
+        self.assertIn(result["decision"],("STOP","CONTINUE"))
+        self.assertTrue(result.get("requires_remote_github_verification"))
+        state=json.loads((root/"delivery/current-state.yaml").read_text())
+        self.assertEqual(result["milestone"],state["milestone"])
+        self.assertEqual(result["decision"],"STOP" if state["status"]=="blocked" else "CONTINUE")
 
 if __name__=="__main__":
     unittest.main()
@@ -195,14 +200,22 @@ jobs:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: '3.11'
-      - name: Unit verify allowed documented BLOCKED state
+      - name: Confirm actual checked-out SHA
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+      - name: Unit verify continuity contract
         run: python -m unittest discover -s tests -v
-      - name: Assert startup appropriately stops before scope approval
+      - name: Verify startup decision agrees with checked-in state
         run: |
-          set +e
-          python tools/startup.py
-          status=$?
-          test "$status" -eq 2
+          python - <<'PY'
+          import json
+          from tools.startup import inspect
+          state=json.load(open("delivery/current-state.yaml"))
+          result=inspect(".")
+          expected="STOP" if state["status"]=="blocked" else "CONTINUE"
+          assert result["decision"]==expected, result
+          assert result["requires_remote_github_verification"] is True
+          print("Startup gate decision:",expected)
+          PY
 ''',
       "README.md":("# "+brief["title"]+"\n\n"+brief["outcome"]+
         "\n\n**Status: requirements-only starter. No application implementation, cloud hosting, accounts or product tests are included.**\n"+
