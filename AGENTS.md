@@ -15,6 +15,10 @@ Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The
 10. Do not automatically promote code from a single benchmark. Compare multiple application implementations, verify reuse value, licensing, risks and negative tests before extracting shared mechanisms.
 11. **Infrastructure neutrality:** The App Delivery Engine must not require DigitalOcean, Supabase or any specific cloud/database provider. Application repositories own hosting choices, credentials, deployment manifests and runtime adapters. Preserve swappable contracts and never infer approval to provision infrastructure from a passing test or an application-level provider preference.
 
+## Ease-of-use and working-application priority
+
+Read [Delivery Usability Milestones](docs/DELIVERY-USABILITY-MILESTONES-V1.md) before adding templates, dashboards, orchestrators or more AI intelligence. **First prove a real usable application**, measure fresh-user first-run steps, and preserve exact-HEAD browser/data tests. Prefer fixing observed friction in the existing `web-list` generator over adding a new framework. Do not confuse a requirements-only bootstrap with a working application. Statuses D0–D8 are evidence-based stage gates, not automatic permissions.
+
 ## Multi-interface architecture and truthful commands
 
 Before adding a new CLI, script, agent skill, API or dashboard action, read [Delivery Engine Architecture v1](docs/DELIVERY-ENGINE-ARCHITECTURE-V1.md) and [registered commands](registry/commands.json). Every interface must share one set of validated command contracts, authority checks, execution rules and evidence. The current catalog lists only genuine existing operations; proposed workflow names are **not** executable. Do not create a second approval system or invent a dashboard-only source of truth. Start with read-only preflights and benchmark UI usefulness before building a dashboard.
