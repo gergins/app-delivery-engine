@@ -51,6 +51,12 @@ Store the benchmark result with numeric observations, blockers and one next chan
 
 Generate via `python -m ade examples/web-list.json <new-empty-directory>`. The existing Engine CI generates a functional local web-list application, verifies HTTP and persistent SQLite behavior, and exercises the browser with Chromium. **Inspect its actual user-facing commands and actions before announcing specific CRUD operations.** Capture an onboarding transcript and fresh agent experience next. Avoid changing frameworks until the test proves a friction point.
 
+## Automated first-run evidence — bounded technical result
+
+New `tests/test_first_run_benchmark.py` verifies the existing `web-list` profile in a fresh temporary directory: generate, start a real Python HTTP process, save through API, stop/start the server, read the original item from SQLite, and confirm **zero generated Python/HTML/JS edits**. This is an automated synthetic onboarding surrogate, **not an actual unfamiliar human or independent agent usability assessment**.
+
+The initial GitHub CI observation at `1974759d92345a714f67835d7d398022e47269e1` was **0.242 s measured inside the CI test** for generation plus two server starts, save and persistence; **9 files generated, 2 server starts, zero source edits**, and pass. This is an observed benchmark datapoint, not a guaranteed user timing, a whole setup/installation time or an independently validated UX score. Exact source logs: https://github.com/gergins/app-delivery-engine/actions/runs/41699536583 . Repeat on final HEAD and across fresh human/agent sessions before setting thresholds.
+
 ## Suggested first simplification (if benchmark exposes friction)
 
 Provide a concise task-oriented CLI:
