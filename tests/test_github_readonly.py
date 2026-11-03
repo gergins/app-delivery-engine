@@ -69,8 +69,7 @@ class ReadonlyGitHubTests(unittest.TestCase):
             inspect_pull_request("example/app", True, fetch=lambda _: None)
 
     def test_cli_bad_arguments_safe(self):
-        with self.assertRaises(SystemExit):
-            main(["../wrong", "1"])
+        self.assertEqual(main(["../wrong", "1"]), 2)
 
 
 if __name__ == "__main__":
