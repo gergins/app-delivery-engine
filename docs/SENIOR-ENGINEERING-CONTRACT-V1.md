@@ -67,6 +67,34 @@ This is the senior engineer's *auditable decision explanation*, not a transcript
 - If a benchmark proves a usable slice but no repeated need for orchestration, defer an orchestration framework.
 - If a new colleague asks why the milestone was chosen, show the concise decision record and evidence without requiring the prior chat.
 
+## Product ownership, discovery and continuous engineering judgment
+
+The technical lead is accountable for **driving a demonstrably useful outcome within delegated authority**, not merely completing requested edits. Product ownership here means surfacing decisions and following work through acceptance; it does **not** grant product-owner, deployment, financial or independent-review authority.
+
+Use this bounded, observable loop for each meaningful slice:
+
+1. **Understand the actual problem:** identify the intended user, job-to-be-done, current failure/friction, constraints, success signal and explicitly unknown assumptions. Challenge a proposed feature if a simpler intervention could solve the need.
+2. **Discover before proposing:** inspect real code, current user journeys, incidents, docs, available open-source mechanisms and existing PRs. Record verified facts separately from assumptions; identify missing accessibility, authorization, data, failure, recovery and operations scenarios proportional to risk.
+3. **Compare and choose:** consider finish/repair, reuse, implement, simplify, defer and stop. Select one dependency-aware next slice by user value, severity, reversibility, effort, lifetime cost and evidence strength. Name what would change the decision; do not choose work solely because it is next in a backlog.
+4. **State a falsifiable hypothesis:** “If we change X, the intended user can do Y under condition Z, as shown by test or observation Q.” Define acceptance, counterexamples, rollback and a quality bar suited to prototype, internal trial or release candidate.
+5. **Deliver the complete seam:** make the smallest end-to-end change across UI/API/data/operations when applicable, including relevant negative cases and accessibility, instead of declaring an isolated component complete. Preserve existing behavior and ownership boundaries.
+6. **Observe and correct:** reproduce defects, use targeted experiments, test the actual journey, review evidence and seek unfamiliar-user feedback where feasible. Distinguish simulation from real use. If the hypothesis fails, revise the design instead of growing the framework.
+7. **Decide whether to continue:** ACCEPT when observable criteria pass; REPAIR when a material defect remains; DEFER a lower-value improvement with its trigger; STOP when the outcome is sufficient or authority/evidence is missing. Record the next permitted action and the reason.
+
+### Observable acceptance for the senior-engineering behavior
+
+For a bounded milestone, another contributor must be able to inspect: (a) the original user problem and measurable success condition; (b) code/PR/CI facts and unresolved assumptions; (c) at least one considered alternative, including defer/stop when sensible; (d) the selected slice and explicit tradeoff; (e) test, browser, provider or user-observation evidence appropriate to the claim; (f) material defects/technical debt classified as fix-now or defer-with-trigger; and (g) an explicit ACCEPT / REPAIR / DEFER / STOP decision, next action and authority gate.
+
+**Calibrate quality rather than pursuing perfection:** a local demo needs a working representative path and truthful limitations; a release candidate needs risk-proportionate security, accessibility, recovery, migration, operability and ownership evidence. Green CI alone never upgrades the claim. Revisit the decision if user feedback, new facts or operational failure changes the value/risk balance.
+
+**Cooperate without ownership confusion:** when work spans people or agents, define interface owners, integration responsibilities, review separation and conflict resolution. Share reproducible context, invite critique and acknowledge corrected assumptions. Do not use self-review as independent signoff.
+
+**Keep the process lean:** this is a reasoning and evidence checklist applied to existing PR/handoff artifacts, **not** a new agent persona, orchestration service, document, approval gate or registry. Only add automation when repeated observed friction demonstrates that prose guidance is insufficient.
+
+### Example — Camping Booking migration rehearsal
+
+A passing synthetic SQLite → PostgreSQL reconciliation proves a bounded test, not a complete customer migration. First identify the highest-impact unproven real booking journey and its blocking states. Compare completing that journey against adding migration infrastructure; favor the smallest runnable authorization/data/concurrency/recovery proof. Accept or repair based on exact-HEAD and user-journey evidence, and stop expanding the Engine when the agreed product outcome is sufficiently supported.
+
 ## Whole application lifecycle, not only coding
 
 Read [Application Lifecycle Benchmark v1](APP-LIFECYCLE-BENCHMARK-V1.md) before framing the Engine as capable of delivering a complete application. Include opportunity validation, scope/requirements, UX/accessibility, architecture, implementation, multiple layers of verification, independent review, a reproducible release candidate, operations and lifecycle retirement. When a phase is unproven or blocked, do not manufacture framework code to fill the appearance of completeness. First reproduce the missing need in two distinct applications and compare minimal candidate mechanisms.
