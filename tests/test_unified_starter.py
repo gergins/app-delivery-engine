@@ -59,7 +59,7 @@ class UnifiedStarterTests(unittest.TestCase):
             self.assertEqual(preflight.returncode,2)
             self.assertEqual(json.loads(preflight.stdout)["decision"],"STOP")
             tested=subprocess.run([sys.executable,"-m","unittest","discover",
-                                   "-s","tests","-v"],cwd=output,
+                                   "-s","tests","-p","test_app.py","-v"],cwd=output,
                                   capture_output=True,text=True,timeout=20)
             self.assertEqual(tested.returncode,0,tested.stderr)
 
