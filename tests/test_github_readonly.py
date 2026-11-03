@@ -24,10 +24,32 @@ class ReadonlyGitHubTests(unittest.TestCase):
         result = inspect_pull_request("example/app", 5, fetch=fetch)
         self.assertEqual(result["decision"], "RECONCILED")
         self.assertEqual(result["tested_sha"], SHA)
-        self.assertEqual(len(seen), 2)
+        self.assertEqual(len(seen), 3)
         self.assertTrue(all(x.startswith(BASE) for x in seen))
         self.assertIn("head_sha=", seen[1])
+        self.assertEqual(seen[0], seen[2])
         self.assertFalse(result["approvals"]["deploy"])
+
+    def test_concurrent_push_during_fetch_refused(self):
+        requests = []
+        def fetch(url):
+            requests.append(url)
+            if "/pulls/5" in url:
+                return pr() if len(requests) == 1 else pr("b" * 40)
+            return {"total_count": 1, "workflow_runs": [run()]}
+        result = inspect_pull_request("example/app", 5, fetch=fetch)
+        self.assertEqual(result["decision"], "STOP")
+        self.assertEqual(result["reason"], "head-changed-during-inspection")
+
+    def test_pr_draft_state_changed_refused(self):
+        requests = []
+        def fetch(url):
+            requests.append(url)
+            if "/pulls/5" in url:
+                return pr() if len(requests) == 1 else dict(pr(), draft=False)
+            return {"total_count": 1, "workflow_runs": [run()]}
+        result = inspect_pull_request("example/app", 5, fetch=fetch)
+        self.assertEqual(result["reason"], "pr-state-changed-during-inspection")
 
     def test_network_error_is_not_synthetic_success(self):
         def offline(_):
