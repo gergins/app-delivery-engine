@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "records": [
+    {
+      "id": "method-selection",
+      "owner": "App Delivery Engine",
+      "status": "benchmarked",
+      "contract": "ade.method_selection.select_method",
+      "applicability": [
+        "engineering-task-kind",
+        "explicit-risk-overlays"
+      ],
+      "limitations": [
+        "advisory-only",
+        "not-semantic-risk-classifier",
+        "no-remote-policy-enforcement"
+      ]
+    },
+    {
+      "id": "application-bootstrap-and-continuity",
+      "owner": "App Delivery Engine",
+      "status": "candidate",
+      "contract": "ade.bootstrap.plan_bootstrap/bootstrap and generated tools/startup.py",
+      "applicability": [
+        "new-app-repo-starter",
+        "offline-handoff"
+      ],
+      "limitations": [
+        "no-github-repo-provisioning",
+        "no-autonomous-agent-enforcement",
+        "no-remote-sha-verification"
+      ]
+    },
+    {
+      "id": "postgresql-allocation",
+      "owner": "Camping Booking",
+      "status": "app-specific",
+      "contract": "app.postgres_lifecycle",
+      "applicability": [
+        "booking-inventory"
+      ],
+      "limitations": [
+        "two-independent-benchmark-tables",
+        "not-app-integrated",
+        "not-universal-engine-feature"
+      ]
+    }
+  ]
+}

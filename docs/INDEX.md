@@ -1,0 +1,51 @@
+# Documentation map, verified capabilities, and engineering decisions
+
+**Source of truth:** repository code, PR reviews, exact-commit CI and approved product decisions. This index is not proof that a planned capability is implemented. Read [AGENTS.md](../AGENTS.md) first. When returning after a lost browser/session, use [Continuity & Next Work](CONTINUITY-NEXT-WORK-V1.md).
+
+## Start here by task
+
+| Need | Existing authoritative document | Current reality |
+| --- | --- | --- |
+| Get a useful app running | [README quick start](../README.md), [Delivery usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) | Existing local web-list UI/API/SQLite generator; opt-in unified starter for low-risk tasks, not production |
+| Start an application idea | [Bootstrap continuity](BOOTSTRAP-CONTINUITY-M1.md), [AGENTS](../AGENTS.md) | Requirements-first starter, with optional generic runnable web-list for low-risk briefs; no working VRS or online repo creator |
+| Resume a lost/interrupted session | [Continuity & next work](CONTINUITY-NEXT-WORK-V1.md), [Handoff](HANDOFF.md) | Offline startup, read-only GitHub API lookup (with second HEAD check), snapshot reconciliation and advisory selector; no atomic attestation or full review/issue integration |
+| Choose engineering methods | [Method selection](METHOD-SELECTION-V1.md), [Senior engineer contract](SENIOR-ENGINEERING-CONTRACT-V1.md) | Advisory risk-specific method only |
+| Choose architecture, interfaces, commands | [Architecture](DELIVERY-ENGINE-ARCHITECTURE-V1.md), [command registry](../registry/commands.json) | Most unified commands/adapters remain design proposals |
+| Review complete application lifecycle | [Lifecycle benchmark](APP-LIFECYCLE-BENCHMARK-V1.md) | Acceptance/evidence gates documented, not automated end-to-end |
+| Evaluate reusable patterns | [Benchmark-to-ownership policy](BENCHMARK-TO-OWNERSHIP-POLICY.md), [capability registry](../registry/capabilities.json), [lessons](../registry/lessons.json) | Limited records; never infer adoption from an experiment |
+| Evaluate a particular app | [Camping benchmark](BENCHMARK-CAMPING-BASELINE-V1.md), [Life Services Hub benchmark](BENCHMARK-LIFE-SERVICES-HUB-V1.md), [VRS reference](VRS-REFERENCE-WORKFLOW.md) | App-specific checks, not universal Engine guarantees |
+
+## Verified delivery chain and gaps
+
+The chain to prove is **brief → owner-accepted requirement → bounded runnable slice → tests → exact HEAD CI → review → usable preview → recoverable handoff → next decision**.
+
+| Link | Existing mechanism | Evidence still needed / gap |
+| --- | --- | --- |
+| Brief to scope | bootstrap strict JSON | Product owner accepts measurable requirement and non-goals |
+| Scope to runnable app | opt-in unified bootstrap + web-list demo | Product-specific UI beyond generic list, and fresh-human usability still unproven |
+| Runnable app to tests | synthetic HTTP/SQLite/browser exercises | Fresh contributor usability, keyboard/a11y assessment, negative failures |
+| Tests to trusted evidence | pinned Actions + SHA assertion | Workflow success for the **current** candidate HEAD, job logs, trustworthy source linkage |
+| Evidence to review | AGENTS/contract and PR | Real reviewer identity and approvals; not a fabricated JSON boolean |
+| App to preview | local HTTP server | Accessible, reproducible independent preview; no deployment implied |
+| Interruption to resume | generated startup + pure reconciliation | Read adapter now exists; cross-repo live CLI benchmark, reviews/issues, durable operation checkpoints still missing |
+| Resume to next slice | pure deterministic selector | Provenance-backed survey and comparisons across at least two apps |
+| Release candidate to operations | lifecycle documentation | App-specific backups, restore, rollback, threat model, cost, owner and human gate |
+
+**Documentation ownership and drift control:** `AGENTS.md` is the compact entry point and binding approval reminder; the [senior contract](SENIOR-ENGINEERING-CONTRACT-V1.md) owns engineering judgment; [usability milestones](DELIVERY-USABILITY-MILESTONES-V1.md) owns first-run and behavior evaluations; [method selection](METHOD-SELECTION-V1.md) owns risk overlays; GitHub PR/CI owns live evidence. Prefer links over repeating entire rule sets. Only promote a recurring, reproducible high-impact mistake into an executable check, with a negative/counterexample test and a maintainer; avoid another standalone process document.
+
+## Senior-engineering decision rules
+
+1. **Inspect before inventing.** Check current code, PRs, CI logs and actual user journey. A failed test or unverified state outranks a new feature.
+2. **Prioritize impact and prerequisites.** Repair security/data loss/recovery, then broken tests or blocked accepted outcomes. Prefer the smallest coherent vertical slice; do not optimize individual component neatness at the cost of the user journey.
+3. **End-to-end means behavior, not breadth.** A slice is complete only when a person can perform its accepted task, data/state survives the required lifecycle, negative cases are tested, evidence matches source HEAD, and the next contributor can resume. It does not imply all product features or production readiness.
+4. **Define a stopping point.** Stop adding capability when the accepted outcome is met and verified, incremental user value is low, or further work requires owner/reviewer/provider approval. Do not keep polishing because the backlog is nonempty.
+5. **Add a shared Engine mechanism only with evidence.** Require (a) the same demonstrated gap across two different apps or a critical common security invariant, (b) a reproducible failure, (c) less lifetime complexity than a local workaround, (d) tests, documentation, license review, (e) an owner and maintenance strategy. Otherwise keep the fix app-local.
+6. **Usability is a release input, not optional decoration.** Measure first-run commands/manual edits, understanding of errors, browser task success, keyboard/focus/labels and independent handoff; avoid claiming that synthetic automation measures human usability.
+7. **Explicitly defer** speculative multi-agent orchestration, rich admin dashboards, dozens of templates, generic cloud provisioning, autonomous merge/deploy and complex workflow languages until a demonstrated repeated user bottleneck justifies them.
+8. **Preserve authority and evidence boundaries.** Local JSON and model suggestions never authorize account changes, production credentials, payments, merge, deployment, external review or security signoff.
+
+## Next engineering milestone
+
+**P0:** Verify current draft PR CI; if failing, repair root cause. Verify read-only GitHub PR/Actions lookup and race detection in exact-HEAD CI; independently run CLI after interruption on Camping Booking and Community Picks. Compare results with connector observations, then select next work from issue/review evidence. Record whether recovery chose the right next step and whether it avoided duplicate PRs. The implemented GitHub lookup is a bounded, point-in-time read-only inspection—not an atomic GitHub state attestation or autonomous recovery.
+
+Do not create new documents or layers for merely synonymous concepts. Consolidate existing overlapping docs before building another interface.

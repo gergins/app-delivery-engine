@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "records": [
+    {
+      "id": "camping-booking-m6.6c",
+      "archetype": "transactional-multitenant",
+      "repository": "gergins/camping-booking",
+      "tested_sha": "4e3299c7114de50cfa28c6e79998cf7af812b857",
+      "workflow_url": "https://github.com/gergins/camping-booking/actions/runs/41689268694",
+      "status": "bounded-pass",
+      "claim": "Isolated PostgreSQL allocation hold/confirm/cancel/expire/closure tested; not actual PostgreSQL-backed Flask application",
+      "non_claims": [
+        "production-ready",
+        "full-data-migration",
+        "hardened-external-idp"
+      ]
+    },
+    {
+      "id": "life-services-hub-first-slice",
+      "archetype": "offline-static-client",
+      "repository": "gergins/live-services-hub",
+      "tested_sha": "11b97e360f760701c0da42d368765d962fdf8e41",
+      "workflow_url": "https://github.com/gergins/live-services-hub/actions/runs/41337482878",
+      "status": "historical-bounded-pass",
+      "claim": "Offline localStorage task CRUD with Node and real browser test",
+      "non_claims": [
+        "fresh-main-ci",
+        "production-service",
+        "cloud-synchronization"
+      ]
+    }
+  ]
+}

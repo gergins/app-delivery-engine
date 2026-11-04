@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "slug": "local-items-starter",
+  "title": "Local Items",
+  "problem": "I need a simple local list of items I can revisit",
+  "users": [
+    "Local user"
+  ],
+  "outcome": "Add an item, reload the browser and find it again",
+  "domain": "offline-tasks"
+}
