@@ -199,3 +199,7 @@ Start with a manual evidence comparison and a small trial, then automate only wh
 **Stop criterion for more engineering work:** once the failure is localized to an external pre-run diagnostic and accessible sources are exhausted, stop code modifications, assign a specific evidence acquisition handoff, and resume only after that evidence arrives. Do not add an autonomous collector until recurring volume and measured time savings warrant it.
 
 **Preserved rollback for this knowledge addition:** `backup/pre-ci-lifecycle-knowledge-gap-20261104` at `4e8a453b16ba50f217a507a13633f24a43f1769b`. Existing branch and CI remain unchanged.
+
+
+### Minimal CI first-failure classifier (2026-11-04)
+The existing contract's CI lifecycle rule now has an offline, advisory helper: `ade.ci_triage.classify_first_failure(previous_jobs=..., failed_jobs=..., workflow_changed=...)`. Supply reviewed metadata from the **last passing** and **first failing** exact-commit runs, plus a separately verified workflow diff. It distinguishes `pre-step-unknown`, `step-execution-failure` and `insufficient-evidence`, returning a specific evidence request and role owner. It does **not** authenticate metadata, fetch GitHub annotations, determine billing or root cause, self-edit workflows, schedule retries or waive testing. Five focused regression tests in `tests/test_ci_triage.py` enforce the boundary. This replaces repeated speculative diagnosis, rather than adding a new framework. Rollback: `backup/pre-ci-first-failure-triage-helper-20261104` at `1538a12aa40f1024b07d5e1eaa2d55dc2917fe91`.
