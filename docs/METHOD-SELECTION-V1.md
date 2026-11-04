@@ -83,3 +83,22 @@ Rollback before this slice: `backup/pre-evidence-learning-loop-20261104`, exact 
 **Current measured examples:** Camping Booking's 2026-11-03 exact-HEAD success `02b2579de6724f5645d7ba2bfce61690c559c702` run 41724177465 (three parallel jobs); Community Picks' `c939b43e89be15e3d904f92803690b8799966444` run 41629084098. Setup dominated portions of both jobs, but these are **unpaired baseline observations**, not causal savings or proof that the same mechanism helps both applications. Run `python -m unittest discover -s tests -p 'test_learning_loop.py' -v` for the new safety-focused unit test. No CI workflow or policy changes in this slice.
 
 **Next step:** inspect exact-HEAD CI for the full existing draft PR, then, if useful, try one reversible, nonmandatory CI setup optimization in a separate controlled application experiment with explicitly measured results. Do not automatically merge, deploy, spend, grant credentials, change branch protection or bypass required tests.
+
+
+## Stability, effectiveness and practicality gate before automation (2026-11-04)
+
+Preserved rollback: `backup/pre-learning-stability-readiness-gate-20261104` at `b255b334c6ec2a0cf4032eff1e0c71a28de6a5d0`. Continue in existing draft PR #1; keep `main`, existing CI, apps, permissions and approval policies unchanged.
+
+**Current status: MANUAL/ADVISORY ONLY.** The learning-loop helper now rejects reused exact workflow URLs and mismatched repository/run URL shapes. These syntactic checks do not verify the actual GitHub run or its SHA, job conclusion, trust context, freshness, independent test assertions or user outcome. An external caller must fetch and reconcile GitHub source-of-truth records; never equate `verified=True` with self-authentication.
+
+### Acceptance before autonomous collection or optimization
+- **Stable:** exact-HEAD CI succeeds repeatedly; no flaky or order-dependent tests; cross-session recovery and rollback are demonstrated, including interrupted/failed executions.
+- **Effective:** on identical real application changes, an independently reviewed baseline-vs-candidate comparison shows improved user-facing delivery, meaningful CI/rework cost benefit and **no missed high-impact seeded regressions**.
+- **Practical:** independent developer can inspect the proposal, reproduce the result, explain omitted tests and safely reject it without learning a new framework; measure steps, support burden and maintenance overhead.
+- **Trustworthy evidence:** unique run IDs/URLs, matching repository/head/commit, job statuses and logs, comparable environment and dependencies, positive **and failed** trials; exclude confidential content and untrusted instructions in logs.
+- **Safe:** distinct accountable decision owner/reviewer, explicit protections and rollback, preserved required checks, license/privacy review. Do not auto-modify pipeline, merge, deploy, spend or obtain production credentials.
+- **Stop condition:** unverified evidence, insufficient cross-app sample, inability to reproduce a gain, safety/authority ambiguity, CI instability or benefits smaller than implementation/maintenance cost => remain manual and focus on delivering applications.
+
+**Overlooked failure modes:** correlated evidence from the same fixture, a GitHub URL with the wrong repository, duplicate run counting, provenance spoofing, hidden failing/aborted CI, changed runtime or dependency graph, benchmark selection bias, misleading success-only averages, accessibility regression and optimizing job minutes while degrading fault detection. One passing unit suite and two retrospectively inspected app runs cannot satisfy these gates.
+
+**Immediate proof:** inspect fresh exact-HEAD CI after provenance fixes, then use one controlled real-app experiment with preserved rollback and bounded sample. There is intentionally no always-on agent, workflow mutation, scheduled task, retraining or automatic promotion.
