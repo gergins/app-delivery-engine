@@ -53,3 +53,18 @@ Use `ade.method_selection.assess_evidence_reuse` only **after** a senior develop
 Before recommending reuse, inspect provenance at the original test commit and confirm test logic, environment, fixture data, dependency graph and acceptance criteria still apply. Do not use this helper as an independent security assessment. A past successful run does not prove the new HEAD passed. Branch rules, required CI, risk-specific reviews, human approvals, merge and deployment stops remain unchanged.
 
 **Benchmark before promoting:** compare existing full workflow with the advisor on real low/medium/high-risk changes. Measure CI time, feedback latency and deliberately seeded regression detection (including counterexamples where reuse must be rejected). Do not create a separate orchestration system or silently reduce .github/workflows/verify.yml.
+
+
+## M1 evidence-reuse benchmark — measured scope and promotion rules (2026-11-04)
+
+The bounded test lives in `tests/test_adaptive_evidence_benchmark.py`. It uses the existing app generator and ephemeral test directories (no real user data, no external provider or credentials). Four cases exercise:
+1. unchanged CLI behavior with documentation-only scope, allowing advisory reuse while retaining mandatory current-HEAD CI;
+2. generated CLI behavior mutation (`transform` stops trimming), requiring expanded verification and proving an actual generated test rejects the mutant;
+3. generated web-list API input-validation mutation, requiring expanded verification and proving a real HTTP/SQLite generated test rejects the mutant;
+4. transitive runtime dependency change and missing evidence metadata, both refusing reuse.
+
+**What this establishes if exact-HEAD CI passes:** the current advisor recognizes these explicitly supplied scenarios and the two generated-app regressions detect injected defects. It does not infer impacted scopes, prove real booking/auth/tenant isolation, validate GitHub evidence URLs, measure user outcomes, or independently authorize CI omission. The concurrency risk label in the web-list scenario demands caution; the injected mutation is *input validation*, not a concurrency defect.
+
+**What remains to measure:** paired CI execution time, runner cost, flaky retries and defect-detection rates under selected vs baseline testing across two distinct real app repositories. Current workflow deliberately remains fully enabled. Do not claim a saving from four green benchmark cases; collect comparable timed results and run a genuinely nontrivial dependency/authorization counterexample before promoting automatic skipping.
+
+**Rollback for this milestone:** `backup/pre-evidence-adaptive-benchmark-m1-20261104`, commit `d86221e545376c4d2421631e83ae34d1fc6cbb8a`. Earlier rollback `backup/pre-evidence-based-adaptive-verification-20261104` remains. Preserve both before any scope expansion. Draft PR #1 only; no merge/deployment.
