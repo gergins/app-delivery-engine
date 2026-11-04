@@ -8,7 +8,8 @@ def observation(identifier, repository, mechanism="browser-setup", verified=True
     return {
         "id": identifier, "repository": repository,
         "commit_sha": "a" * 40,
-        "evidence_url": "https://github.com/example/repo/actions/runs/123",
+        "evidence_url": "https://github.com/" + repository + "/actions/runs/" +
+                        str(100 + sum(ord(ch) for ch in identifier)),
         "category": "efficiency", "mechanism": mechanism,
         "finding": "Browser setup dominates elapsed CI time",
         "verified": verified, "outcome": outcome,
@@ -50,6 +51,15 @@ class LearningLoopTests(unittest.TestCase):
         self.assertEqual(len(output["proposals"]), 2)
         self.assertTrue(all(p["decision"] == "defer" for p in output["proposals"]))
 
+    def test_two_apps_must_have_distinct_realistic_ci_run_urls(self):
+        a = observation("a", "example/camping")
+        b = observation("b", "example/community")
+        self.assertEqual(recommend_learning([a, b])["proposals"][0]["decision"],
+                         "propose")
+        b["evidence_url"] = a["evidence_url"]
+        with self.assertRaises(ValueError):
+            recommend_learning([a, b])
+
     def test_invalid_inputs_fail_closed(self):
         for bad in (
             "not-list",
@@ -58,6 +68,12 @@ class LearningLoopTests(unittest.TestCase):
             [{**observation("a", "example/camping"), "category": "unknown"}],
             [{**observation("a", "example/camping"), "verified": "yes"}],
             [{**observation("a", "example/camping"), "evidence_url": "http://other"}],
+            [{**observation("a", "example/camping"), "evidence_url":
+              "https://github.com/example/other/actions/runs/123"}],
+            [{**observation("a", "example/camping"), "repository": "example/../camp"}],
+            [observation("a", "example/camping"),
+             {**observation("b", "example/camping"),
+              "evidence_url": observation("a", "example/camping")["evidence_url"]}],
         ):
             with self.subTest(bad=bad):
                 with self.assertRaises(ValueError):
