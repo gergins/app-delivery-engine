@@ -38,3 +38,18 @@ Never merge, deploy, enable public access, authorize spending, use production se
 
 ## What remains unproven
 This is an initial narrow method-selection core. It does not assess semantic task risk automatically, prove design fitness, control agent execution, enforce CI policy remotely or guarantee delivery quality. Formal decision ownership, risk taxonomy expansion, skill/version provenance, review separation and an automated agent harness are later evidence-driven decisions.
+
+
+## Evidence-Based Adaptive Verification — bounded trial (2026-11-04)
+Preserved rollback: `backup/pre-evidence-based-adaptive-verification-20261104`, original head `e71c3ed044c943848feaeb806f6addd66757b6f8`.
+
+Use `ade.method_selection.assess_evidence_reuse` only **after** a senior developer has established the complete affected scope and relevant transitive dependencies. The function takes an explicit prior test record (behavior, passing result, commit, evidence URL, covered scopes, exact dependency map and environment). It does not inspect GitHub, compute dependency graphs, independently authenticate CI results or authorize skipped required checks.
+
+- **Reuse prior evidence:** same covered behavior, no changed overlapping scope, identical dependency versions/environment and no declared high-consequence risk. This avoids rerunning *unnecessary optional* suites; required current-commit CI still runs.
+- **Targeted verification:** uncovered behavior, missing/failed evidence, changed environment or high-consequence risk without confirmed changed scope. Run relevant checks and capture new evidence.
+- **Expanded verification:** changed covered scope or dependency drift. Analyze affected contracts, integration and user journeys; add required negative/recovery tests.
+- **Unknowns:** invalid risk input raises; incomplete evidence never qualifies. The human must ensure all transitive consumers and semantic changes were captured; omission makes the advisory decision unsafe.
+
+Before recommending reuse, inspect provenance at the original test commit and confirm test logic, environment, fixture data, dependency graph and acceptance criteria still apply. Do not use this helper as an independent security assessment. A past successful run does not prove the new HEAD passed. Branch rules, required CI, risk-specific reviews, human approvals, merge and deployment stops remain unchanged.
+
+**Benchmark before promoting:** compare existing full workflow with the advisor on real low/medium/high-risk changes. Measure CI time, feedback latency and deliberately seeded regression detection (including counterexamples where reuse must be rejected). Do not create a separate orchestration system or silently reduce .github/workflows/verify.yml.
