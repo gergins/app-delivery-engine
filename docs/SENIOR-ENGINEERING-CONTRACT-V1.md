@@ -167,3 +167,35 @@ Start with a manual evidence comparison and a small trial, then automate only wh
 **Stop gates:** protected data, unverified account permissions, unclear authority, or missing decisive security evidence => no merge/deploy or automated test skipping. Preserve rollback before changes.
 
 **Rollback for this rule:** `backup/pre-essential-evidence-recovery-rule-20261104`, commit `3b24041eacecfdd0b33bf8c0a28706c619a069eb`. The rule is operational guidance only; no automatic recovery worker or credential permission was created.
+
+
+## CI Execution Lifecycle Triage — reuse existing evidence before debugging (2026-11-04)
+
+**Knowledge category:** delivery operations → CI failure localization → runner allocation and platform observability. Integrate this as a small, reusable method in this contract, not an independent agent, skill package or automation framework.
+
+**First-pass rule:** compare the *last exact-HEAD PASS* with the *first exact-HEAD FAIL*, not only the latest failing commit. Inspect ordered commits, changed files, actual workflow-content diff and CI job metadata before choosing which subsystem to investigate.
+
+**Failure phase classification (fastest decisive evidence first):**
+
+| Phase | Typical observable | Owner role and first check |
+| --- | --- | --- |
+| Workflow admission | No run or workflow validation diagnostic | CI maintainer: YAML, event filters, required workflow policy |
+| Runner allocation / platform dispatch | Job failure, empty `runner_name`, zero recorded `steps` | Repository Actions operator: pre-step GitHub UI error/annotations, runner entitlement/limits, platform health |
+| Bootstrap | Runner exists, checkout/setup/install step fails | CI maintainer: action refs, permissions, dependencies and service provisioning |
+| Test execution | Named test step actually ran and failed | Owning developer: reproduce exact test/commit; focused root-cause analysis |
+| Post-test/verification | Tests pass, artifact/cleanup/report/review gate fails | CI/release owner: artifact, exact-SHA, cleanup and approval evidence |
+
+**Do not infer causality from chronology alone.** A new test file cannot be asserted to have failed in execution if zero steps ran. A later workflow change cannot explain a failure on an earlier commit where the workflow was unchanged. Empty runner metadata narrows the fault phase but does not independently prove billing, GitHub outage or particular account restriction. Compare other repositories only to test the *scope* of the failure; their green CI cannot prove this repository's account settings.
+
+**Low-effort decision algorithm:**
+1. Find the last passing run/commit and first failing run/commit on the relevant branch; verify event types and precise SHAs.
+2. Compare all intervening commits and file/line changes; identify the first failure's workflow blob SHA and check whether it matches the last passing workflow.
+3. Check `runner_name` and step list for every failing job. **Zero steps across all jobs => prioritize platform/runner admission**, not code debugging, mutation analysis or test retries.
+4. Acquire the precise missing pre-step error from available run UI, logs, check annotations or authorized repository/account administrator. The engineer owns tracking the gap; the operator owns access-dependent evidence retrieval.
+5. Change only the implicated layer after evidence confirms the failure. Preserve rollback, run unchanged required CI at exact HEAD, capture outcome; keep uncertain issues blocked and escalate appropriately.
+
+**Concrete case (Camping Booking):** passing source `02b2579de6724f5645d7ba2bfce61690c559c702` on 2026-11-03, run 41724177465: 3 named runners, step counts 30/16/13. First failing commit `15ba783f047490fc0fc6862a1a13482323fa9862` (2026-11-04): *only* `tests/test_adaptive_ci_trial.py` added; workflow unchanged. First failing run 41806942243: three jobs have empty runner names and zero steps, end after ~2 seconds. Workflow changed only in subsequent `88e9ecd69599c6a2afc73bfafbf94326ba7e1ad0` to add a CI step; documentation followed. Therefore **new CI step cannot explain first failure**. Root cause still unconfirmed without the GitHub pre-step annotation. Track recovery in `gergins/camping-booking` issue #2. Do not optimize or rerun speculatively.
+
+**Stop criterion for more engineering work:** once the failure is localized to an external pre-run diagnostic and accessible sources are exhausted, stop code modifications, assign a specific evidence acquisition handoff, and resume only after that evidence arrives. Do not add an autonomous collector until recurring volume and measured time savings warrant it.
+
+**Preserved rollback for this knowledge addition:** `backup/pre-ci-lifecycle-knowledge-gap-20261104` at `4e8a453b16ba50f217a507a13633f24a43f1769b`. Existing branch and CI remain unchanged.
