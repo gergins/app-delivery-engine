@@ -123,3 +123,12 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 - **Owner/authority:** Existing owner request to implement the contract within a draft PR; no merge, deployment, mandatory policy or semantic product decision delegated.
 - **Blocked dependencies:** New implementation must preserve these constraints, and new acceptance test cases must explicitly demonstrate rejection conditions.
 - **Verification:** Python stdlib unittest discovery and exact-HEAD CI if available; report local/remote status separately. Revisit and ask if a semantic meaning, approval policy or automated mandatory CI gate must change.
+
+**INV-IMPLEMENT-002 — Startup integration and test tightening (2026-11-06)**
+
+- **Trigger:** Owner requested continuation after first exact-HEAD green test; reviewers need a discoverable entry path rather than a detached contract document.
+- **Classification:** Nonsemantic additive documentation and verification integration. No changes to approval authority, default ASK mode, runtime behavior, or mandatory workflow requirements.
+- **Alternatives:** Introduce a new CI job or status check (deferred: scope/approval policy implications); duplicate a second policy in AGENTS (rejected: drift); link the contract from existing startup guidance and test discovery (selected: smallest reversible integration).
+- **Scope and resolution:** Link this contract and the pure validator from `AGENTS.md` and documentation index; ensure its test module remains picked up by existing unittest discovery; improve known-bad tests only where behavior is already defined. This **does not make supplied-record validation a mandatory gate for every PR** and does not inspect approval references or real-world F0 evidence.
+- **Authority:** Owner authorized bounded continuation on existing draft PR; no semantic product changes, merge, deployment or security approval.
+- **Verification:** Exact-HEAD existing CI, negative-case unit tests, PR diff and documentation review. If mandatory repository-wide gates are desired, decide separately under an explicit semantic authority record.
