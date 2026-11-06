@@ -18,6 +18,34 @@ A clean-sheet, evidence-led application delivery system.
 ## Development
 See the first milestone branch and draft PR for the generator, tests and delivery workflow.
 
+## Execute ADE in one command (local demonstration)
+
+From this draft branch with Python 3.11 or newer, use a new destination directory:
+
+```powershell
+python -m ade.demo .\my-ade-demo --serve
+```
+
+This generates a **generic offline list app** with its product handoff, runs its
+API smoke tests, then serves a local UI at **http://127.0.0.1:8000**. It stores
+SQLite data in the generated directory. Stop with Ctrl+C. To start again
+without overwriting the project:
+
+```powershell
+cd .\my-ade-demo
+python -m app.server
+```
+
+Run `python -m ade.demo .\my-ade-demo` without `--serve` to generate and verify
+without starting a server. The destination **must not already exist** and its
+parent must exist. No account, token, Docker, cloud provider or Registry access
+is needed for this demo. This is not a working VRS or camping booking product;
+product approval and remote CI review remain separate.
+
+For Registry-assisted engineering planning, use
+`python -m ade.registry_bridge --help` with a separately verified private
+Registry snapshot. The local starter can run independently of the Registry.
+
 ## Quick start: working web-list application (local only)
 
 This is the **runnable** path. It is distinct from the requirements-only bootstrap below. From an Engine checkout with Python 3.11:
