@@ -6,15 +6,19 @@ execution approvals. No background jobs, shell dispatch, or cloud deployment.
 """
 import argparse
 import json
+import re
 import urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 from .github_readonly import inspect_pull_request
+from .app_builder import plan_request, create_project
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "registry" / "commands.json"
+WORKSPACE = Path.home() / "ADE-Projects"
+MAX_BODY = 6000
 
 PAGE = """<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -51,6 +55,20 @@ This dashboard does not expose or automatically fetch its contents.</p></section
 <section><h2>Available ADE commands</h2><p class="subtle">Only real registered operations. Execute commands manually from a trusted terminal.</p>
 <div id="commands" aria-live="polite">Loading command catalog...</div></section>
 </div>
+<section><h2>App Builder — first working workflow</h2>
+<p class="subtle">Describe a low-risk single-user list app. ADE will show a plan before creating
+a project in your local ADE-Projects workspace. This is a reusable template, not general AI coding.</p>
+<form id="builderForm">
+<div class="grid"><div><label for="appTitle">App name</label><input id="appTitle" maxlength="100" required value="Family Items"></div>
+<div><label for="appSlug">Project folder name</label><input id="appSlug" maxlength="50" pattern="[a-z][a-z0-9-]{2,49}" required value="family-items"></div></div>
+<label for="appIdea">What do you want it to do?</label>
+<textarea id="appIdea" rows="3" maxlength="1000" required style="width:100%;padding:12px;font:inherit;border:1px solid #8797ae;border-radius:7px">Keep a simple personal list of household items on my laptop.</textarea>
+<input type="hidden" id="appTemplate" value="offline-list">
+<button type="submit">1. Review engineering plan</button></form>
+<div id="builderResult" role="status" aria-live="polite"><p class="subtle">No project planned. Nothing will be created until you confirm.</p></div>
+<div id="builderConfirm" hidden><label><input type="checkbox" id="approveCreate" style="width:auto">
+I reviewed the plan and approve creating only this local demonstration.</label>
+<button id="createApp" type="button">2. Create and test project</button></div></section>
 <section><h2>Engineering status</h2><div class="grid">
 <div><strong>Delivery and method selection</strong><p>Runnable local starter, tests, advisory method controls and continuity helpers.</p></div>
 <div><strong>Registry intelligence</strong><p>Read-only snapshot bridge; private-source authentication and cross-repository verification remain separate.</p></div>
@@ -96,6 +114,57 @@ document.getElementById("inspectForm").addEventListener("submit",async(event)=>{
   if(!response.ok)result.append(el("p","Inspection blocked or incomplete.","warning"));
  }catch(e){clear(result);result.append(el("p","Inspection failed. No verified status.","warning"))}
 });
+
+let proposed=null;
+const builderForm=document.getElementById("builderForm"),builderResult=document.getElementById("builderResult"),
+      confirmation=document.getElementById("builderConfirm");
+function currentRequest(){return {slug:document.getElementById("appSlug").value.trim(),
+ title:document.getElementById("appTitle").value.trim(),idea:document.getElementById("appIdea").value.trim(),template:"offline-list"}}
+async function builderCall(route,payload){
+ const response=await fetch(route,{method:"POST",headers:{"Content-Type":"application/json"},
+  body:JSON.stringify(payload),cache:"no-store"});
+ const data=await response.json();
+ if(!response.ok)throw new Error(data.reason||"Operation blocked");
+ return data;
+}
+builderForm.addEventListener("submit",async(e)=>{
+ e.preventDefault();proposed=null;confirmation.hidden=true;clear(builderResult);
+ builderResult.append(el("p","Reviewing plan..."));
+ try{
+  const request=currentRequest();
+  const data=await builderCall("/api/app-builder/plan",request);
+  proposed={request,hash:data.plan_hash};clear(builderResult);
+  builderResult.append(el("h3","Proposed local application"));
+  builderResult.append(el("p",data.implemented_behavior));
+  builderResult.append(el("p","Planned files: "+data.files));
+  builderResult.append(el("p","NOT included: "+data.not_implemented.join(", "),"warning"));
+  builderResult.append(el("p","Project scope and production release remain unapproved.","warning"));
+  document.getElementById("approveCreate").checked=false;confirmation.hidden=false;
+ }catch(err){clear(builderResult);builderResult.append(el("p","STOP: "+err.message,"warning"))}
+});
+for(const id of ["appSlug","appTitle","appIdea"]){
+ document.getElementById(id).addEventListener("input",()=>{proposed=null;confirmation.hidden=true;
+ clear(builderResult);builderResult.append(el("p","Inputs changed. Review a new plan before creating.","warning"))})
+}
+document.getElementById("createApp").addEventListener("click",async()=>{
+ if(!proposed||!document.getElementById("approveCreate").checked){
+  builderResult.append(el("p","Review the plan and check the confirmation first.","warning"));return
+ }
+ confirmation.hidden=true;
+ builderResult.append(el("p","Creating and testing local project..."));
+ try{
+  const data=await builderCall("/api/app-builder/create",
+    {request:proposed.request,plan_hash:proposed.hash,confirmed:true});
+  clear(builderResult);builderResult.append(el("h3","Local project created and tested","ok"));
+  builderResult.append(el("p","Directory: "+data.project_path));
+  builderResult.append(el("p","Local API smoke tests passed: "+String(data.tests_passed)));
+  builderResult.append(el("p","Open PowerShell and run:"));
+  builderResult.append(el("pre",data.start_command));
+  builderResult.append(el("p","Then open "+data.preview_url+" in the browser. Production approval is still required.","subtle"));
+  proposed=null;
+ }catch(err){clear(builderResult);builderResult.append(el("p","STOP: "+err.message,"warning"))}
+});
+
 loadCommands();
 </script></body></html>"""
 
@@ -169,7 +238,40 @@ class Handler(BaseHTTPRequestHandler):
             'Open <a href="/">ADE Control Center home</a>.</p></main></body></html>')
 
     def do_POST(self):
-        return self.respond_json(405, {"decision": "STOP", "reason": "read-only"})
+        route = urlsplit(self.path)
+        if route.path not in ("/api/app-builder/plan", "/api/app-builder/create") or route.query:
+            return self.respond_json(405, {"decision": "STOP", "reason": "unsupported-write-route"})
+        # Browser-initiated local writes require same-origin and loopback Host;
+        # another website cannot submit a cross-site create request.
+        host = self.headers.get("Host", "")
+        origin = self.headers.get("Origin", "")
+        if (not re.fullmatch(r"(?:localhost|127\.0\.0\.1):[0-9]{2,5}", host)
+                or origin not in ("http://" + host,)):
+            return self.respond_json(403, {"decision": "STOP", "reason": "origin-not-allowed"})
+        if self.headers.get("Content-Type", "").split(";")[0].strip() != "application/json":
+            return self.respond_json(415, {"decision": "STOP", "reason": "json-required"})
+        try:
+            size = int(self.headers.get("Content-Length", "-1"))
+            if not 0 < size <= MAX_BODY:
+                raise ValueError("Invalid size")
+            request = json.loads(self.rfile.read(size))
+            if route.path.endswith("/plan"):
+                response = plan_request(request)
+            else:
+                if type(request) is not dict or set(request) != {"request", "plan_hash", "confirmed"}:
+                    raise ValueError("Expected confirmed project plan")
+                response = create_project(
+                    request["request"], plan_hash=request["plan_hash"],
+                    confirmed=request["confirmed"], workspace=WORKSPACE)
+            status = 200 if response.get("decision") != "STOP" else 409
+            return self.respond_json(status, response)
+        except (ValueError, FileExistsError, OSError, TimeoutError):
+            return self.respond_json(409, {"decision": "STOP", "reason": "invalid-or-conflicting-project-plan"})
+        except (json.JSONDecodeError, TypeError):
+            return self.respond_json(400, {"decision": "STOP", "reason": "malformed-request"})
+        except Exception:
+            # No secrets or server-local filesystem traces on the wire.
+            return self.respond_json(500, {"decision": "STOP", "reason": "builder-internal-error"})
 
     def log_message(self, fmt, *args):
         # Avoid writing repository query details, token or request parameters.
