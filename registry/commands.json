@@ -69,10 +69,10 @@
     {
       "id": "control-center.readonly",
       "entrypoint": "python -m ade.control_center",
-      "effect": "localhost-read-only",
+      "effect": "localhost-planning-and-explicit-local-create",
       "status": "implemented-and-ci-pending",
       "authorization": "none for public GitHub PR reads; configured GITHUB_TOKEN for private repo",
-      "guarantee": "serves local UI, registered commands and explicit read-only PR/CI snapshot; no writes, approval or background polling"
+      "guarantee": "local UI with read-only PR/CI inspection and explicitly confirmed offline-list project creation; no remote writes, approval or background polling"
     },
     {
       "id": "repo.demo.run",
@@ -89,6 +89,14 @@
       "status": "synthetic-contract-ci-passed;private-source-auth-unverified",
       "authorization": "operator provides verified snapshot outside ADE",
       "guarantee": "advisory dependency-aware capability/method plan; no authentication of supplied snapshot bytes"
+    },
+    {
+      "id": "app-builder.local.plan-create",
+      "entrypoint": "python -m ade.control_center (App Builder panel)",
+      "effect": "explicit-local-create",
+      "status": "implementation-ci-pending",
+      "authorization": "local user's affirmative confirmation of an unchanged plan",
+      "guarantee": "bounded offline-list template; writes new project only, runs smoke tests, refuses overwrite; no arbitrary AI coding, remote merge, deployment or production approval"
     }
   ]
 }
