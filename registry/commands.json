@@ -97,6 +97,14 @@
       "status": "implementation-ci-pending",
       "authorization": "local user's affirmative confirmation of an unchanged plan",
       "guarantee": "bounded offline-list template; writes new project only, runs smoke tests, refuses overwrite; no arbitrary AI coding, remote merge, deployment or production approval"
+    },
+    {
+      "id": "agent.work-order.prepare",
+      "entrypoint": "python -m ade.agent_handoff owner/repo PR --task \"...\" --acceptance \"...\" --kind bugfix --risk concurrency",
+      "effect": "read-only",
+      "status": "proposed-ci-verification",
+      "authorization": "none for read-only handoff; coding agent execution separately authorized",
+      "guarantee": "inspect live PR/CI and create exact-head scoped agent handoff; no automatic dispatch, code writes, merge or deployment"
     }
   ]
 }
