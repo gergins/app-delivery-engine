@@ -141,3 +141,15 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 - **Scope:** Add `assess_invariant_evidence` using caller-provided GitHub snapshot already reconciled by existing code, require exact matching tested SHA and success, reject unknown/missing CI, stale/untrusted snapshots, and require explicit external evidence references for acceptance claims; keep authority false. Add negative tests. Do not modify external systems or claim authenticated approval, missing-decision discovery, true F0 execution or cryptographic attestation.
 - **Owner:** Bounded M1 development permission in existing draft PR; mandatory repository policy and semantic changes remain subject to separate authorization.
 - **Acceptance:** New tests reject stale, pending, failed, malformed or incomplete evidence; existing tests remain green; exact-HEAD workflow evidence is checked separately.
+
+## M1: Read-only exact-HEAD evidence adapter (proposed)
+
+`ade.invariant_gate.assess_invariant_evidence` composes two existing components without reimplementing the GitHub API client:
+
+1. Use `ade.github_readonly.inspect_pull_request(repo, pr_number)` on the current trusted checkout, with necessary **read-only** GitHub credentials, to produce a reconciled snapshot. The existing two-read HEAD drift check and workflow reconciliation apply; any remote retrieval or verification error is STOP.
+2. Supply decision and rung records to `assess_invariant_evidence(decisions=..., rungs=..., github_snapshot=...)`. Every rung must reference the exact tested PR HEAD and include at least one inspectable `evidence_refs` GitHub URL. The adapter rejects non-success CI, pending/stale/mismatched revision, missing references or invalid record chronology.
+3. Run `python -m unittest discover -s tests -v` and check **actual current** GitHub workflow results for the new code. The callable is an **advisory check**, not an automatically invoked policy gate for all PRs. The unit tests exercise synthetic snapshots; they cannot authenticate actual review decisions or prove that the cited artifact contains the claimed test.
+
+**Trust boundary:** Both the snapshot and ledger remain caller-supplied values. URLs are references, not verified artifact contents. This is an incremental check against accidental stale evidence, **not** a tamper-proof approval or an autonomous semantic decision detector. Do not promote returned `records-consistent` into reviewer signoff or release authority.
+
+**Next evidence milestone:** tie rung evidence claims to actual workflow steps/artifacts and map tested source changes to a contemporaneous ledger entry, using verified GitHub metadata and preserving explicit human approval. A universal mandatory gate should be a separate authorized policy decision.
