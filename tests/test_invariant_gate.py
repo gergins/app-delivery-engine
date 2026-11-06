@@ -258,7 +258,7 @@ class TestCriticalPredicateSensitivity(unittest.TestCase):
 
     def test_false_positive_rung_predicate_is_killed(self):
         self.decision["first_dependent_change_at"] = "2026-11-06T11:00:00+01:00"
-        self.rung["checks_passed"] = None
+        self.rung["checks_passed"] = 0
         with self.assertRaisesRegex(ValueError, "rung checks not green"):
             self.evaluate(self.original)
         weakened = self.mutated(
