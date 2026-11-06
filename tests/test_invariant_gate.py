@@ -211,3 +211,57 @@ class TestRungStepEvidence(unittest.TestCase):
         self.assessment["ci_status"] = "pending"
         with self.assertRaises(ValueError):
             self.check()
+
+
+class TestCriticalPredicateSensitivity(unittest.TestCase):
+    """Deliberately weaken two controls in memory; prove bad examples slip through.
+
+    This is a focused mutation check, not an exhaustive mutation score.
+    """
+    def setUp(self):
+        from pathlib import Path
+        from ade.invariant_gate import assess_invariant_records
+        self.original = assess_invariant_records
+        self.source = (Path(__file__).resolve().parents[1]
+                       / "ade" / "invariant_gate.py").read_text(encoding="utf-8")
+        self.decision = {
+            "id": "D1", "classification": "nonsemantic",
+            "proposed_at": "2026-11-06T10:00:00+01:00",
+            "first_dependent_change_at": "2026-11-06T10:00:00+01:00",
+            "status": "proposed",
+        }
+        self.rung = {
+            "id": "F0", "entry": "request", "artifact": "result",
+            "evidence_revision": "a" * 40, "checks_passed": True,
+            "negative_checks_passed": True, "running_spine_verified": True,
+            "stubs_disclosed": True, "decision_refs": ["D1"],
+        }
+
+    def mutated(self, before, after):
+        self.assertEqual(self.source.count(before), 1)
+        namespace = {"__name__": "ade.invariant_gate", "__package__": "ade"}
+        exec(compile(self.source.replace(before, after), "<mutation-check>", "exec"),
+             namespace)
+        return namespace["assess_invariant_records"]
+
+    def evaluate(self, fn):
+        return fn(decisions=[self.decision], rungs=[self.rung], ask="delegated")
+
+    def test_equal_timestamp_boundary_is_killed(self):
+        # Baseline stops when proposal and code change share a timestamp.
+        with self.assertRaisesRegex(ValueError, "decision not declared"):
+            self.evaluate(self.original)
+        weakened = self.mutated(
+            'if _time(row["proposed_at"]) >= _time(row["first_dependent_change_at"]):',
+            'if _time(row["proposed_at"]) > _time(row["first_dependent_change_at"]):')
+        self.assertEqual(self.evaluate(weakened)["decision"], "records-consistent")
+
+    def test_false_positive_rung_predicate_is_killed(self):
+        self.decision["first_dependent_change_at"] = "2026-11-06T11:00:00+01:00"
+        self.rung["checks_passed"] = None
+        with self.assertRaisesRegex(ValueError, "rung checks not green"):
+            self.evaluate(self.original)
+        weakened = self.mutated(
+            'if rung["checks_passed"] is not True or rung["negative_checks_passed"] is not True:',
+            'if rung["checks_passed"] is False or rung["negative_checks_passed"] is not True:')
+        self.assertEqual(self.evaluate(weakened)["decision"], "records-consistent")
