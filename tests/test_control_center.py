@@ -81,6 +81,55 @@ class ControlCenterTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("ADE · Engineering Control Center", body)
 
+    def post_builder(self, route, payload, *, origin=True):
+        headers = {"Content-Type": "application/json"}
+        if origin:
+            headers["Origin"] = self.url
+        req = urllib.request.Request(
+            self.url + route, data=json.dumps(payload).encode(),
+            headers=headers, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return r.status, json.loads(r.read())
+        except urllib.error.HTTPError as err:
+            return err.code, json.loads(err.read())
+
+    def test_builder_workflow_from_browser_is_real(self):
+        from ade.app_builder import TEMPLATE
+        from pathlib import Path
+        import tempfile
+        request = {"slug": "desk-items", "title": "Desk Items",
+                   "idea": "Store a private list of my desk items on this computer.",
+                   "template": TEMPLATE}
+        with tempfile.TemporaryDirectory() as root:
+            with patch.object(control_center, "WORKSPACE", Path(root)):
+                status, plan = self.post_builder("/api/app-builder/plan", request)
+                self.assertEqual(status, 200)
+                self.assertEqual(plan["decision"], "PLAN")
+                self.assertFalse((Path(root) / "desk-items").exists())
+                status, created = self.post_builder("/api/app-builder/create", {
+                    "request": request, "plan_hash": plan["plan_hash"], "confirmed": True})
+                self.assertEqual(status, 200, created)
+                self.assertTrue(created["tests_passed"])
+                self.assertFalse(created["approval_granted"])
+                self.assertTrue((Path(root) / "desk-items" / "app" / "server.py").exists())
+                status, rejected = self.post_builder("/api/app-builder/create", {
+                    "request": request, "plan_hash": plan["plan_hash"], "confirmed": True})
+                self.assertEqual(status, 409)
+                self.assertEqual(rejected["decision"], "STOP")
+
+    def test_builder_requires_same_origin_and_explicit_current_confirmation(self):
+        request = {"slug": "desk-items", "title": "Desk Items",
+                   "idea": "Store a private list of my desk items on this computer.",
+                   "template": "offline-list"}
+        status, rejected = self.post_builder("/api/app-builder/plan", request, origin=False)
+        self.assertEqual(status, 403)
+        self.assertEqual(rejected["reason"], "origin-not-allowed")
+        status, rejected = self.post_builder("/api/app-builder/create", {
+            "request": request, "plan_hash": "invalid", "confirmed": False})
+        self.assertEqual(status, 409)
+        self.assertEqual(rejected["decision"], "STOP")
+
     def test_posts_and_unknown_routes_are_blocked(self):
         status, _, _ = self.read("/api/inspect", method="POST")
         self.assertEqual(status, 405)
