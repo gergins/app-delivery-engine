@@ -132,3 +132,12 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 - **Scope and resolution:** Link this contract and the pure validator from `AGENTS.md` and documentation index; ensure its test module remains picked up by existing unittest discovery; improve known-bad tests only where behavior is already defined. This **does not make supplied-record validation a mandatory gate for every PR** and does not inspect approval references or real-world F0 evidence.
 - **Authority:** Owner authorized bounded continuation on existing draft PR; no semantic product changes, merge, deployment or security approval.
 - **Verification:** Exact-HEAD existing CI, negative-case unit tests, PR diff and documentation review. If mandatory repository-wide gates are desired, decide separately under an explicit semantic authority record.
+
+**INV-IMPLEMENT-003 — M1 exact-HEAD evidence composition (2026-11-06)**
+
+- **Trigger:** Owner authorized M1 after the contract/startup CI passed. Current validator trusts supplied pass flags and revision strings and does not compose existing GitHub reconciliation.
+- **Class:** Nonsemantic, additive read-only assurance helper; no changes to product meaning, ASK authority, enforcement policy or release gates.
+- **Choices:** (A) new GitHub API/CI implementation (rejected: duplicates existing `ade.github_readonly` and `ade.github_reconcile`); (B) make all PRs mandatory (deferred: policy/authorization implications); (C) compose existing reconciled exact-HEAD snapshot with record validator (selected).
+- **Scope:** Add `assess_invariant_evidence` using caller-provided GitHub snapshot already reconciled by existing code, require exact matching tested SHA and success, reject unknown/missing CI, stale/untrusted snapshots, and require explicit external evidence references for acceptance claims; keep authority false. Add negative tests. Do not modify external systems or claim authenticated approval, missing-decision discovery, true F0 execution or cryptographic attestation.
+- **Owner:** Bounded M1 development permission in existing draft PR; mandatory repository policy and semantic changes remain subject to separate authorization.
+- **Acceptance:** New tests reject stale, pending, failed, malformed or incomplete evidence; existing tests remain green; exact-HEAD workflow evidence is checked separately.
