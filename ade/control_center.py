@@ -39,10 +39,9 @@ code{overflow-wrap:anywhere}pre{overflow:auto;white-space:pre-wrap;overflow-wrap
 #result{min-height:60px}footer{padding:12px 0;color:#52627a}
 </style></head><body>
 <header><h1>ADE · Engineering Control Center</h1>
-<p>Read-only local dashboard · GitHub evidence · methods · capabilities</p></header>
+<p>Local ADE workspace · App Builder · agent work orders · GitHub evidence</p></header>
 <main>
-<section><h2>System boundaries</h2><p>This is the real ADE control interface, not the generated items-list app.
-It is a read-only first milestone: no automatic coding, merging, deployment or approval.</p>
+<section><h2>System boundaries</h2><p>This is ADE itself, not the generated items-list app. You can create reviewed local starter projects and inspect GitHub evidence. The registered agent work-order command prepares a coding handoff but does not automatically start Codex, merge, deploy or approve.</p>
 <p><strong>Private Registry:</strong> the separate registry bridge accepts a locally supplied pinned snapshot.
 This dashboard does not expose or automatically fetch its contents.</p></section>
 <div class="grid">
