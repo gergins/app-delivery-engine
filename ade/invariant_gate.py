@@ -80,3 +80,47 @@ def assess_invariant_records(*, decisions, rungs, ask="semantic"):
     return {"decision": "records-consistent", "status": "advisory-only",
             "independent_evidence_required": True, "approval_granted": False,
             "rungs_checked": len(rungs), "decisions_checked": len(decisions)}
+
+
+def assess_invariant_evidence(*, decisions, rungs, github_snapshot, ask="semantic"):
+    """Compose the existing GitHub reconciliation with supplied invariant records.
+
+    The caller must fetch the PR and workflow runs using an authorized read-only
+    route and call github_reconcile/readonly. A caller can still forge these
+    objects; this pure function cannot authenticate GitHub, tests, reviewers,
+    timestamps or approvals and must never grant release authority.
+    """
+    from .github_reconcile import SHA
+
+    if type(github_snapshot) is not dict:
+        raise ValueError("missing GitHub snapshot")
+    head = github_snapshot.get("head_sha")
+    if (github_snapshot.get("decision") != "RECONCILED"
+            or github_snapshot.get("remote_verified") is not True
+            or github_snapshot.get("authority") != "no-authorization-derived"
+            or type(head) is not str or SHA.fullmatch(head) is None
+            or github_snapshot.get("tested_sha") != head
+            or github_snapshot.get("ci_status") != "success"):
+        raise ValueError("missing successful exact-HEAD CI evidence")
+    urls = github_snapshot.get("workflow_urls")
+    if (type(urls) is not list or not urls
+            or any(type(url) is not str
+                   or not url.startswith("https://github.com/")
+                   for url in urls)):
+        raise ValueError("missing CI links")
+    if not isinstance(rungs, list):
+        raise ValueError("invalid rungs")
+    for rung in rungs:
+        if type(rung) is not dict or rung.get("evidence_revision") != head:
+            raise ValueError("rung not checked at exact PR HEAD")
+        refs = rung.get("evidence_refs")
+        if (type(refs) is not list or not refs or any(
+                type(ref) is not str or not ref.startswith("https://github.com/")
+                for ref in refs)):
+            raise ValueError("missing inspectable rung evidence references")
+    assessment = assess_invariant_records(decisions=decisions, rungs=rungs, ask=ask)
+    return {**assessment, "ci_status": "success",
+            "exact_head_sha": head,
+            "ci_evidence_urls": list(urls),
+            "authority": "no-authorization-derived",
+            "evidence_limit": "caller-supplied-snapshot-and-attestations-not-authenticated"}
