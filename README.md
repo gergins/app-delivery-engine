@@ -18,6 +18,31 @@ A clean-sheet, evidence-led application delivery system.
 ## Development
 See the first milestone branch and draft PR for the generator, tests and delivery workflow.
 
+## ADE Engineering Control Center (actual Engine interface)
+
+The local read-only control center is the **ADE interface**, unlike the generated
+items-list demo. It displays the real command catalog and can inspect a chosen
+GitHub pull request and exact-HEAD CI using ADE's existing read-only connector.
+
+From the ADE repository root:
+
+```powershell
+python -m ade.control_center
+```
+
+Open **http://127.0.0.1:8766**. Press Ctrl+C to stop. The dashboard listens
+only on localhost, performs no background polling, and does not run code,
+automatically merge, deploy, spend, or grant approvals. Private repository
+inspection requires an explicitly configured read-only `GITHUB_TOKEN` environment
+variable; never put credentials in the browser or the Git repository.
+Unknown/missing CI evidence results in STOP, not a green status.
+
+**Persistence:** ADE source code is versioned in GitHub and remains executable
+in each local checkout. Pull reviewed changes to update the installed code;
+the dashboard is not a one-time generated artifact or an automatically installed
+Windows service. Generated apps remain separate directories with their own
+data. This is a minimal M7 control interface, not full autonomous delivery.
+
 ## Execute ADE in one command (local demonstration)
 
 From this draft branch with Python 3.11 or newer, use a new destination directory:
