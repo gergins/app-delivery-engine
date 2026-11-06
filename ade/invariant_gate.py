@@ -124,3 +124,69 @@ def assess_invariant_evidence(*, decisions, rungs, github_snapshot, ask="semanti
             "ci_evidence_urls": list(urls),
             "authority": "no-authorization-derived",
             "evidence_limit": "caller-supplied-snapshot-and-attestations-not-authenticated"}
+
+
+def assess_rung_job_steps(*, invariant_assessment, rungs, workflow_run_id, jobs):
+    """Match explicitly named rung checks against read-only GitHub job metadata.
+
+    Caller must obtain jobs from the exact workflow run independently. Step name
+    matching is evidence of execution, NOT proof of test semantics or identity.
+    """
+    if (type(invariant_assessment) is not dict
+            or invariant_assessment.get("decision") != "records-consistent"
+            or invariant_assessment.get("ci_status") != "success"
+            or invariant_assessment.get("approval_granted") is not False
+            or type(invariant_assessment.get("exact_head_sha")) is not str
+            or type(workflow_run_id) is not int or workflow_run_id <= 0
+            or type(jobs) is not list or not jobs
+            or type(rungs) is not list or not rungs):
+        raise ValueError("missing prior exact-HEAD verification or workflow jobs")
+
+    matched = {}
+    for job in jobs:
+        if (type(job) is not dict or type(job.get("id")) is not int
+                or type(job.get("run_id")) is not int
+                or job["run_id"] != workflow_run_id
+                or job.get("status") != "completed"
+                or job.get("conclusion") != "success"
+                or type(job.get("steps")) is not list):
+            raise ValueError("incomplete or mismatched GitHub job")
+        for step in job["steps"]:
+            if type(step) is not dict or type(step.get("name")) is not str:
+                raise ValueError("malformed job step")
+            name = step["name"]
+            if name in matched:
+                raise ValueError("duplicate step names cannot anchor rung proof")
+            matched[name] = step
+
+    checked = {}
+    for rung in rungs:
+        if (type(rung) is not dict
+                or rung.get("evidence_revision") != invariant_assessment["exact_head_sha"]
+                or type(rung.get("id")) is not str
+                or type(rung.get("evidence_steps")) is not dict):
+            raise ValueError("missing rung step mapping")
+        steps = rung["evidence_steps"]
+        if set(steps) != {"positive", "negative"}:
+            raise ValueError("positive and negative step names required")
+        pos, neg = steps["positive"], steps["negative"]
+        if (type(pos) is not str or type(neg) is not str
+                or not pos or not neg or pos == neg):
+            raise ValueError("distinct named positive/negative checks required")
+        for name in (pos, neg):
+            step = matched.get(name)
+            if (step is None or step.get("status") != "completed"
+                    or step.get("conclusion") != "success"):
+                raise ValueError("rung step absent, pending or failed: " + name)
+        if rung["id"] in checked:
+            raise ValueError("duplicate rung ID")
+        checked[rung["id"]] = {"positive": pos, "negative": neg}
+
+    if len(checked) != invariant_assessment.get("rungs_checked"):
+        raise ValueError("rung coverage differs from prior assessment")
+
+    return {"decision": "step-names-matched", "status": "advisory-only",
+            "exact_head_sha": invariant_assessment["exact_head_sha"],
+            "workflow_run_id": workflow_run_id, "matched_rungs": checked,
+            "approval_granted": False,
+            "evidence_limit": "caller-supplied-metadata-and-step-names-not-test-semantics"}
