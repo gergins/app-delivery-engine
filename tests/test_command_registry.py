@@ -21,14 +21,33 @@ class CommandRegistryTests(unittest.TestCase):
             "repo.bootstrap.plan","repo.bootstrap.create",
             "repo.scaffold.generate","repo.continuity.start","method.select",
             "continuity.next-work.recommend","continuity.github.reconcile",
-            "continuity.github.inspect"})
+            "continuity.github.inspect", "control-center.readonly",
+            "repo.demo.run", "intelligence.registry.plan",
+            "app-builder.local.plan-create", "agent.work-order.prepare"})
         for command in registry["commands"]:
             self.assertIn(command["effect"],{
-                "read-only","local-create-only","pure-function"})
+                "read-only","local-create-only","pure-function",
+                "localhost-read-only","local-create-and-run",
+                "explicit-local-create","localhost-planning-and-explicit-local-create"})
             self.assertNotIn("deploy",command["id"])
             self.assertNotIn("shell",command["id"])
             self.assertTrue(command["guarantee"])
             self.assertNotIn(command["status"],("automatic-release","independent-review"))
+
+    def test_new_entrypoints_are_real_and_bounded(self):
+        from ade.control_center import catalog, Handler
+        from ade.demo import run_demo
+        from ade.registry_bridge import assess_snapshot
+        from ade.app_builder import plan_request, create_project
+        from ade.agent_handoff import prepare_work_order
+        self.assertTrue(callable(run_demo))
+        self.assertTrue(callable(assess_snapshot))
+        self.assertTrue(callable(plan_request))
+        self.assertTrue(callable(create_project))
+        self.assertTrue(callable(prepare_work_order))
+        self.assertTrue(hasattr(Handler, "do_GET"))
+        self.assertIn("control-center.readonly",
+                      {x["id"] for x in catalog()["commands"]})
 
     def test_existing_entrypoints_match_claimed_modes(self):
         self.assertIn("AGENTS.md",plan_bootstrap({

@@ -18,6 +18,94 @@ A clean-sheet, evidence-led application delivery system.
 ## Development
 See the first milestone branch and draft PR for the generator, tests and delivery workflow.
 
+## M8: Build a real local application through ADE
+
+Start the **App Builder** from the Engine repository:
+
+```powershell
+cd C:\ade-engine
+git switch feat/registry-advisory-bridge-20261106
+git pull --ff-only
+python -m ade.control_center
+```
+
+Open **http://127.0.0.1:8766/** and use the **App Builder** panel.
+Enter a project name, a simple idea and a new folder slug. Click
+**Review engineering plan**, inspect its limitations, check the explicit
+local-creation approval, then click **Create and test project**.
+
+ADE creates a separate project under your Windows user profile in
+`ADE-Projects/<slug>` (on Windows normally
+`C:\Users\<your-user>\ADE-Projects\<slug>`). It generates actual
+UI/API/SQLite code, requirements and continuity files, then runs the
+generated application's API smoke tests. The dashboard prints the
+PowerShell command to start the created application locally on port 8000.
+
+This first builder supports **only a generic single-user offline list**
+and does **not** turn an arbitrary idea into a fully functioning
+domain-specific product. Any other business logic, authentication,
+payments, booking, video calls or deployment requires a separate reviewed
+engineering milestone. This is deliberately not an LLM coding agent.
+No project is created on plan; creation requires confirmation of an
+unchanged plan and refuses to overwrite an existing directory.
+
+Created projects are persistent local files, separate from ADE itself.
+The Control Center remains a versioned ADE tool; update it with Git.
+The M8 workflow is in a draft PR pending review, not merged or deployed.
+
+## ADE Engineering Control Center (actual Engine interface)
+
+The local read-only control center is the **ADE interface**, unlike the generated
+items-list demo. It displays the real command catalog and can inspect a chosen
+GitHub pull request and exact-HEAD CI using ADE's existing read-only connector.
+
+From the ADE repository root:
+
+```powershell
+python -m ade.control_center
+```
+
+Open **http://127.0.0.1:8766**. Press Ctrl+C to stop. The dashboard listens
+only on localhost, performs no background polling, and does not run code,
+automatically merge, deploy, spend, or grant approvals. Private repository
+inspection requires an explicitly configured read-only `GITHUB_TOKEN` environment
+variable; never put credentials in the browser or the Git repository.
+Unknown/missing CI evidence results in STOP, not a green status.
+
+**Persistence:** ADE source code is versioned in GitHub and remains executable
+in each local checkout. Pull reviewed changes to update the installed code;
+the dashboard is not a one-time generated artifact or an automatically installed
+Windows service. Generated apps remain separate directories with their own
+data. This is a minimal M7 control interface, not full autonomous delivery.
+
+## Execute ADE in one command (local demonstration)
+
+From this draft branch with Python 3.11 or newer, use a new destination directory:
+
+```powershell
+python -m ade.demo .\my-ade-demo --serve
+```
+
+This generates a **generic offline list app** with its product handoff, runs its
+API smoke tests, then serves a local UI at **http://127.0.0.1:8000**. It stores
+SQLite data in the generated directory. Stop with Ctrl+C. To start again
+without overwriting the project:
+
+```powershell
+cd .\my-ade-demo
+python -m app.server
+```
+
+Run `python -m ade.demo .\my-ade-demo` without `--serve` to generate and verify
+without starting a server. The destination **must not already exist** and its
+parent must exist. No account, token, Docker, cloud provider or Registry access
+is needed for this demo. This is not a working VRS or camping booking product;
+product approval and remote CI review remain separate.
+
+For Registry-assisted engineering planning, use
+`python -m ade.registry_bridge --help` with a separately verified private
+Registry snapshot. The local starter can run independently of the Registry.
+
 ## Quick start: working web-list application (local only)
 
 This is the **runnable** path. It is distinct from the requirements-only bootstrap below. From an Engine checkout with Python 3.11:
