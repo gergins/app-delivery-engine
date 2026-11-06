@@ -132,3 +132,82 @@ class TestExactHeadInvariantEvidence(unittest.TestCase):
         with self.assertRaises(ValueError):
             assess_invariant_evidence(decisions=[self.decision],
                                       rungs=[self.rung], github_snapshot=None)
+
+
+from ade.invariant_gate import assess_rung_job_steps
+
+
+class TestRungStepEvidence(unittest.TestCase):
+    def setUp(self):
+        self.sha = "a" * 40
+        self.assessment = {
+            "decision": "records-consistent", "ci_status": "success",
+            "approval_granted": False, "exact_head_sha": self.sha,
+            "rungs_checked": 1,
+        }
+        self.rung = {
+            "id": "F0", "evidence_revision": self.sha,
+            "evidence_steps": {"positive": "Verify application",
+                               "negative": "Verify failure scenarios"},
+        }
+        self.jobs = [{
+            "id": 44, "run_id": 10, "status": "completed",
+            "conclusion": "success",
+            "steps": [
+                {"name": "Verify application", "status": "completed",
+                 "conclusion": "success"},
+                {"name": "Verify failure scenarios", "status": "completed",
+                 "conclusion": "success"},
+            ],
+        }]
+
+    def check(self):
+        return assess_rung_job_steps(
+            invariant_assessment=self.assessment, rungs=[self.rung],
+            workflow_run_id=10, jobs=self.jobs)
+
+    def test_matching_steps_do_not_grant_approval(self):
+        result = self.check()
+        self.assertEqual(result["decision"], "step-names-matched")
+        self.assertFalse(result["approval_granted"])
+        self.assertEqual(result["matched_rungs"]["F0"]["negative"],
+                         "Verify failure scenarios")
+
+    def test_failed_pending_and_missing_steps_rejected(self):
+        for status, conclusion in (
+            ("completed", "failure"), ("in_progress", None)
+        ):
+            with self.subTest(status=status, conclusion=conclusion):
+                original = self.jobs[0]["steps"][1].copy()
+                self.jobs[0]["steps"][1].update(
+                    status=status, conclusion=conclusion)
+                try:
+                    with self.assertRaises(ValueError):
+                        self.check()
+                finally:
+                    self.jobs[0]["steps"][1] = original
+        self.rung["evidence_steps"]["negative"] = "Unknown step"
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_job_must_belong_to_same_run(self):
+        self.jobs[0]["run_id"] = 999
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_missing_negative_step_and_duplicate_names_rejected(self):
+        self.rung["evidence_steps"] = {"positive": "Verify application"}
+        with self.assertRaises(ValueError):
+            self.check()
+        self.rung["evidence_steps"]["negative"] = "Verify application"
+        with self.assertRaises(ValueError):
+            self.check()
+
+    def test_stale_rung_or_unverified_ci_rejected(self):
+        self.rung["evidence_revision"] = "b" * 40
+        with self.assertRaises(ValueError):
+            self.check()
+        self.rung["evidence_revision"] = self.sha
+        self.assessment["ci_status"] = "pending"
+        with self.assertRaises(ValueError):
+            self.check()
