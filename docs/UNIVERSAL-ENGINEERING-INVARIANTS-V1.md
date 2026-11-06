@@ -111,3 +111,15 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 - **Accessibility:** what an interpreter or Deaf user sees when captions fail can change communication semantics and requires an explicit failure policy.
 
 **This contract documents intended behavior; it does not attest that any integration, enforcement, CI or rollout has happened.**
+
+## Implementation decision ledger (recorded before dependent code)
+
+**INV-IMPLEMENT-001 — Initial enforceable slice; proposed and delegated for this bounded PR (2026-11-06)**
+
+- **Trigger:** Owner requested implementation/validation of the proposed invariants on the existing review branch.
+- **Classification:** Nonsemantic technical implementation; no change to product-facing behavior, existing permission boundaries, or the definition of approval. Do not infer this selection grants future semantic approvals.
+- **Alternatives:** (A) new CI workflows and mandatory repository-wide policy (rejected: broad and disruptive); (B) pure standard-library validator called from existing test discovery (selected: small, reversible); (C) documentation only (rejected: no enforceable behavior).
+- **Resolution and scope:** Add a *pure advisory gate* for caller-provided decision and rung manifests; fail closed on malformed chronology, missing semantic approval under ASK=semantic, missing/unverified F0, and broken predecessor rung checks. Supply positive and known-bad tests, without changing existing workflows, agents, app runtime or CI permission policy. This validates only supplied records and **cannot discover omitted decisions, verify a real execution path or authenticate approval identities/CI by itself**.
+- **Owner/authority:** Existing owner request to implement the contract within a draft PR; no merge, deployment, mandatory policy or semantic product decision delegated.
+- **Blocked dependencies:** New implementation must preserve these constraints, and new acceptance test cases must explicitly demonstrate rejection conditions.
+- **Verification:** Python stdlib unittest discovery and exact-HEAD CI if available; report local/remote status separately. Revisit and ask if a semantic meaning, approval policy or automated mandatory CI gate must change.
