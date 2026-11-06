@@ -23,7 +23,7 @@ class CommandRegistryTests(unittest.TestCase):
             "continuity.next-work.recommend","continuity.github.reconcile",
             "continuity.github.inspect", "control-center.readonly",
             "repo.demo.run", "intelligence.registry.plan",
-            "app-builder.local.plan-create"})
+            "app-builder.local.plan-create", "agent.work-order.prepare"})
         for command in registry["commands"]:
             self.assertIn(command["effect"],{
                 "read-only","local-create-only","pure-function",
@@ -39,10 +39,12 @@ class CommandRegistryTests(unittest.TestCase):
         from ade.demo import run_demo
         from ade.registry_bridge import assess_snapshot
         from ade.app_builder import plan_request, create_project
+        from ade.agent_handoff import prepare_work_order
         self.assertTrue(callable(run_demo))
         self.assertTrue(callable(assess_snapshot))
         self.assertTrue(callable(plan_request))
         self.assertTrue(callable(create_project))
+        self.assertTrue(callable(prepare_work_order))
         self.assertTrue(hasattr(Handler, "do_GET"))
         self.assertIn("control-center.readonly",
                       {x["id"] for x in catalog()["commands"]})
