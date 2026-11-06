@@ -183,3 +183,9 @@ This deliberately **does not claim that step names prove the tests' semantics**.
 `tests/test_invariant_gate.py::TestCriticalPredicateSensitivity` exercises two specific known-bad mutations **in memory only**, without editing repository source: (1) weakening the ledger proposal-before-change condition to permit equal timestamps, and (2) weakening a positive rung test requirement so a numeric `0` can be treated as success. Each test demonstrates that the real validator rejects the bad input and the deliberately weakened implementation would accept it. This supplies targeted falsification evidence for two controls, **not** exhaustive mutation coverage, authenticated semantic intent, or an independent security review.
 
 The tests execute a trusted local source copy and therefore belong only in the existing controlled repository CI environment. No untrusted code or remotely supplied mutation is executed.
+
+## M3 cross-repository stewardship proposal (not adopted)
+
+The Engineering Knowledge Registry has opened **draft PR #4** as a candidate canonical owner for versioned I0–I12 guidance: https://github.com/gergins/engineering-knowledge-registry/pull/4 . The candidate is in `contracts/universal-engineering-invariants/v1.0.0-candidate.md` on its **unmerged review branch**; source meaning and ownership remain subject to explicit semantic approval recorded as DEC-M3-001. **Do not replace this local source contract, change its effective authority, or treat the proposed registry branch as an approved stable release.** This is a navigation link, not an integration dependency.
+
+At any future approved adoption, pin the Registry artifact to an exact reviewed commit and preserve any stricter project-specific `AGENTS.md`, senior engineering, security and approval rules. Existing ADE exact-HEAD CI remains separate; Registry M2 user-reported local tests do not authorize ADE merges or production changes.
