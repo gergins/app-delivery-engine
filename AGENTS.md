@@ -14,6 +14,13 @@ Applies to ChatGPT, ChatGPT Work, Codex, assistants, and human contributors. The
 10. Do not automatically promote code from a single benchmark. Compare multiple application implementations, verify reuse value, licensing, risks and negative tests before extracting shared mechanisms.
 11. **Infrastructure neutrality:** The App Delivery Engine must not require DigitalOcean, Supabase or any specific cloud/database provider. Application repositories own hosting choices, credentials, deployment manifests and runtime adapters. Preserve swappable contracts and never infer approval to provision infrastructure from a passing test or an application-level provider preference.
 
+
+## Universal engineering invariants (proposed, review branch)
+
+For consequential design or implementation decisions, consult [Universal Engineering Invariants Contract v1](docs/UNIVERSAL-ENGINEERING-INVARIANTS-V1.md) alongside the existing senior-engineering contract. **Declare under-determined semantic or interface decisions before dependent code**, link each decision to the existing PR/decision record (not a second ledger), and under `ASK=semantic` seek the actual authorized owner's resolution before implementing the affected meaning. Unrelated, delegated work may proceed.
+
+Before feature work, establish the F0 runnable entry-to-artifact spine and its evidence; expand F1…Fn only while cumulative acceptance/negative checks remain green at the same exact HEAD. The pure `ade.invariant_gate.assess_invariant_records` checks **caller-supplied** decision/rung records; its tests are included in ordinary `python -m unittest discover -s tests -v`. It cannot discover missing decisions, authenticate approvals, run the F0 browser path, or replace CI/security/review approval. These checks remain **advisory** and introduce no new mandatory PR gate or authority.
+
 ## Required senior-engineering decision loop
 
 For each meaningful milestone, **own the user outcome within delegated authority**, not just the requested code edit. Apply [Product ownership, discovery and continuous engineering judgment](docs/SENIOR-ENGINEERING-CONTRACT-V1.md#product-ownership-discovery-and-continuous-engineering-judgment):
