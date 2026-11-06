@@ -11,8 +11,8 @@ from pathlib import Path
 
 from ade.method_selection import select_method
 
-SHA = re.compile(r"[0-9a-f]{40}\\Z")
-ID = re.compile(r"[a-z][a-z0-9-]*\\Z")
+SHA = re.compile(r"[0-9a-f]{40}\Z")
+ID = re.compile(r"[a-z][a-z0-9-]*\Z")
 FIELDS = {"id", "name", "domain", "description", "keywords", "depends_on",
           "evidence", "source_status", "maturity"}
 
