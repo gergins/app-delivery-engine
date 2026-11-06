@@ -128,8 +128,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         url = urlsplit(self.path)
-        if url.path == "/" and not url.query:
+        if url.path in ("/", "/index.html") and not url.query:
             return self.respond(200, "text/html; charset=utf-8", PAGE)
+        if url.path == "/favicon.ico" and not url.query:
+            # Browsers request this automatically; it is not a failed ADE operation.
+            self.send_response(204)
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
         if url.path == "/api/commands" and not url.query:
             try:
                 return self.respond_json(200, catalog())
@@ -150,7 +157,16 @@ class Handler(BaseHTTPRequestHandler):
             except (ValueError, OSError, urllib.error.URLError, json.JSONDecodeError):
                 return self.respond_json(400, {"decision": "STOP",
                                                "reason": "invalid-input-or-remote-retrieval"})
-        return self.respond_json(404, {"decision": "STOP", "reason": "not-found"})
+        if url.path.startswith("/api/"):
+            return self.respond_json(404, {"decision": "STOP", "reason": "unknown-api-route",
+                                           "available_routes": ["/api/commands", "/api/inspect"]})
+        return self.respond(
+            404, "text/html; charset=utf-8",
+            '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            '<title>ADE — Page not found</title></head><body>'
+            '<main><h1>ADE page not found</h1>'
+            '<p>This address is not a Control Center page. '
+            'Open <a href="/">ADE Control Center home</a>.</p></main></body></html>')
 
     def do_POST(self):
         return self.respond_json(405, {"decision": "STOP", "reason": "read-only"})
