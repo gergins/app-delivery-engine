@@ -153,3 +153,12 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 **Trust boundary:** Both the snapshot and ledger remain caller-supplied values. URLs are references, not verified artifact contents. This is an incremental check against accidental stale evidence, **not** a tamper-proof approval or an autonomous semantic decision detector. Do not promote returned `records-consistent` into reviewer signoff or release authority.
 
 **Next evidence milestone:** tie rung evidence claims to actual workflow steps/artifacts and map tested source changes to a contemporaneous ledger entry, using verified GitHub metadata and preserving explicit human approval. A universal mandatory gate should be a separate authorized policy decision.
+
+**INV-IMPLEMENT-004 — Match rung claims to actual GitHub job steps (2026-11-06)**
+
+- **Trigger:** CI #237 passed, but previous M1 merely checks evidence URL presence; an arbitrary link can masquerade as rung proof.
+- **Classification:** Nonsemantic evidence-integrity enhancement inside existing proposed contract. No change to product meaning, authorization or CI branch protection.
+- **Alternatives:** Build a new GitHub Actions engine (rejected as duplicate); accept URL existence alone (rejected as misleading); add a strict pure step-to-rung matching function for GitHub job metadata already fetched through read-only tools (selected).
+- **Boundary:** Require selected completed-success jobs from one expected workflow run, exact declared required step names, and completed-success steps. Reject absent, duplicate or failed steps, mixed run IDs and missing negative-step reference. No invented evidence; the caller still must retrieve authentic GitHub metadata. Matching a step name cannot prove that its assertions actually test a semantic invariant.
+- **Decision owner:** Owner requested continued bounded assurance work; no policy/merge/deploy authority delegated.
+- **Verification:** Use fake metadata for focused known-bad tests, then actual exact-HEAD GitHub CI, and report caveats.
