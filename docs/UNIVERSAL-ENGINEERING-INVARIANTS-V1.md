@@ -177,3 +177,9 @@ This deliberately **does not claim that step names prove the tests' semantics**.
 - **Scope:** Add test cases for superficially successful but false assertions (forged approval signal, missing/mismatched rung checks, failed earlier rung, broken chronological ordering). Add focused mutation-sensitivity tests for critical stop predicates using isolated module execution without changing repository code or external systems. The tests must FAIL when an intentionally weakened critical predicate is evaluated; do not count simply raising an unrelated exception as a detected mutant.
 - **Risk/authority:** No additional deployment, merged policy, or human-approval delegation. Recorded prior to tests.
 - **Acceptance:** Baseline tests green; representative deliberate bad conditions rejected; mutation sensitivity demonstrated with a specific failure reason and without external dependencies; exact-HEAD CI status separately verified.
+
+## Focused mutation sensitivity (INV-IMPLEMENT-005)
+
+`tests/test_invariant_gate.py::TestCriticalPredicateSensitivity` exercises two specific known-bad mutations **in memory only**, without editing repository source: (1) weakening the ledger proposal-before-change condition to permit equal timestamps, and (2) weakening a positive rung test requirement so `None` can be treated as success. Each test demonstrates that the real validator rejects the bad input and the deliberately weakened implementation would accept it. This supplies targeted falsification evidence for two controls, **not** exhaustive mutation coverage, authenticated semantic intent, or an independent security review.
+
+The tests execute a trusted local source copy and therefore belong only in the existing controlled repository CI environment. No untrusted code or remotely supplied mutation is executed.
