@@ -74,11 +74,23 @@ class ControlCenterTests(unittest.TestCase):
             self.assertEqual(status, 400)
             self.assertEqual(json.loads(body)["decision"], "STOP")
 
+    def test_browser_favicon_and_index_alias(self):
+        status, _, _ = self.read("/favicon.ico")
+        self.assertEqual(status, 204)
+        status, body, _ = self.read("/index.html")
+        self.assertEqual(status, 200)
+        self.assertIn("ADE · Engineering Control Center", body)
+
     def test_posts_and_unknown_routes_are_blocked(self):
         status, _, _ = self.read("/api/inspect", method="POST")
         self.assertEqual(status, 405)
-        status, _, _ = self.read("/not-found")
+        status, body, headers = self.read("/not-found")
         self.assertEqual(status, 404)
+        self.assertIn("ADE Control Center home", body)
+        self.assertIn("text/html", headers["Content-Type"])
+        status, body, _ = self.read("/api/unknown")
+        self.assertEqual(status, 404)
+        self.assertEqual(json.loads(body)["reason"], "unknown-api-route")
 
 
 if __name__ == "__main__":
