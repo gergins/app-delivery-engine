@@ -162,3 +162,9 @@ Include: outcome, scope and base/head refs; proposed and approved decisions with
 - **Boundary:** Require selected completed-success jobs from one expected workflow run, exact declared required step names, and completed-success steps. Reject absent, duplicate or failed steps, mixed run IDs and missing negative-step reference. No invented evidence; the caller still must retrieve authentic GitHub metadata. Matching a step name cannot prove that its assertions actually test a semantic invariant.
 - **Decision owner:** Owner requested continued bounded assurance work; no policy/merge/deploy authority delegated.
 - **Verification:** Use fake metadata for focused known-bad tests, then actual exact-HEAD GitHub CI, and report caveats.
+
+## M1 extension: GitHub job-step evidence matching
+
+After `assess_invariant_evidence(...)` returns an advisory assessment from exact-HEAD CI, the optional pure `assess_rung_job_steps(invariant_assessment=..., rungs=..., workflow_run_id=..., jobs=...)` compares each rung's explicit `evidence_steps.positive` and `evidence_steps.negative` against completed-success GitHub job steps associated with the selected workflow run. Obtain jobs independently through authorized read-only GitHub access. A pending or failed job/step, missing step, mixed run ID, inconsistent revision, or ambiguous mapping is rejected.
+
+This deliberately **does not claim that step names prove the tests' semantics**. Review job logs, test source, artifacts and known-bad behavior before asserting user-facing F0 or security assurance. A validator result grants no approval and this callable is not an automatically enforced GitHub branch protection rule. The next worthwhile validation is to inspect the actual test assertions and whether a deliberately broken feature produces a failing result, not add another superficial success field.
