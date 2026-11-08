@@ -53,3 +53,20 @@ Inspect completed GitHub Actions and negative permission tests separately. Local
 - Existing ADE capability bridge: `ade/registry_bridge.py`
 
 Keep this as one narrow adapter. Do not duplicate the registry's selector or the Engine's task/risk controls.
+
+## Executable offline selector-to-ADE handoff
+
+The existing Registry's `python engine/registry.py method-select "Build an app"` prints a JSON suggestion. After the caller has separately verified a private Registry checkout and immutable source revision, write that output to a local JSON file (do **not** paste credentials). Then compose it with ADE's existing task/risk controls:
+
+```sh
+python -m ade.owac_handoff_cli \
+  --selection /safe/local/selection.json \
+  --method-record /safe/verified-registry/registry/methods/owac-v1.json \
+  --source-commit FULL_40_CHARACTER_VERIFIED_REGISTRY_SHA \
+  --kind new-slice --risk concurrency
+```
+
+Replace placeholders with actual authenticated local paths and commit. The CLI deliberately does not contact GitHub, check external authority, provision a Codespace or run the app. It rejects missing/unmatched/mismatched method recommendations, invalid revisions, unsupported kinds/risks and weakened governance. All successful outputs remain `advisory-only` and `execution_authorized: false`.
+
+Run `python -m unittest tests.test_owac_handoff_cli -v` and the full repository suite. Exact-HEAD GitHub Actions and review must be checked before any adoption. For the first product proof, prefer the existing `gergins/camping-booking` feature branches: do not create a second booking application or expose the private preview. Its latest checked private preview revision has no demonstrated real GitHub OAuth login or user-visible browser acceptance; distinguish fake-provider browser tests from real identity and human usability.
+
