@@ -12,7 +12,7 @@ from ade.owac_method import OWAC_ID, EXPECTED_REPO, recommend_owac
 
 def compose_selection(*, selection, record, source_commit, kind, risks=()):
     """Reject unmatched or malformed selection; preserve ADE stop gates."""
-    if type(selection) is not dict or selection.get("selection_engine") != "deterministic-phrase-matching-v1":
+    if type(record) is not dict:\n        raise ValueError("Method record must be an object")\n    if type(selection) is not dict or selection.get("selection_engine") != "deterministic-phrase-matching-v1":
         raise ValueError("Unsupported selection output")
     methods = selection.get("methods")
     if type(methods) is not list:
