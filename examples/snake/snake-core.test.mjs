@@ -8,5 +8,5 @@ test('wall collision ends game',()=>{let s=initialState(4);s={...s,food:{x:0,y:0
 test('does not spawn food on snake',()=>{assert.deepEqual(nextFood(2,[{x:0,y:0},{x:1,y:0},{x:0,y:1}],()=>0),{x:1,y:1})});
 test('full board yields no food',()=>{assert.equal(nextFood(1,[{x:0,y:0}]),null)});
 test('rejects invalid board size and random',()=>{assert.throws(()=>initialState(3));assert.throws(()=>nextFood(4,[],()=>1))});
-test('collision with body ends game',()=>{const s={size:5,snake:[{x:2,y:2},{x:2,y:3},{x:1,y:3},{x:1,y:2}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step(s).status,'gameover')});
-test('moving into vacated tail cell is legal',()=>{const s={size:5,snake:[{x:2,y:2},{x:2,y:3},{x:1,y:3},{x:1,y:2}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step({...s,direction:'left',snake:[{x:2,y:2},{x:2,y:3},{x:1,y:3},{x:1,y:2}]}).status,'gameover')});
+test('collision with body ends game',()=>{const s={size:5,snake:[{x:2,y:2},{x:1,y:2},{x:1,y:3},{x:2,y:3}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step(s).status,'gameover')});
+test('moving into vacated tail cell is legal',()=>{const s={size:5,snake:[{x:2,y:2},{x:2,y:3},{x:1,y:3},{x:1,y:2}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step(s).status,'playing')});
