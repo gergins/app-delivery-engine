@@ -1,12 +1,17 @@
-# Universal Visual Workbench v0.2 — reusable operating model
+# Universal Visual Workbench v0.3 — adaptive operating model
 
-**Status:** design + offline example prototype only. Continuity is the permanent default; Fincept is an example dataset, never a domain dependency.
+**Status:** design + offline example prototype only. Continuity is a cross-cutting capability, not a permanent mode or architecture center. Fincept is an example dataset, never a domain dependency.
 
 ## Outcome
 The user can close and return to any project and immediately see the precise last working item, purpose, evidence, unfinished thinking, review state, next action and contextual navigation. No manual reconstruction from conversations, branches, screen lists or files.
 
-## Always-on Continuity
-Continuity is not a phase. It is the landing/home layer over every perspective: open source exploration; reverse engineering; research; review; plan; requirements; behavior/BDD; design/screens; build; verify; discover/improve; and future extensible modes.
+## Neutral workspace core and adaptable capabilities
+The workspace is organized around projects, goals, work items, artifacts, evidence, relationships, decisions, permissions and checkpoints—not Continuity, BDD, open source, application development or any one methodology. Continuity is an always-available service for resuming/recovering work, not the permanent landing view or mandatory stage. The user's preferred home can be an overview, canvas, active task, portfolio, plan or resume. Each is an optional perspective. Open-source exploration, reverse engineering, research, review, planning, requirements, behavior, design, building, verification, discovery and unknown future categories are equally eligible capabilities, enabled according to the goal.
+
+## Adaptive method and resource selection
+Methods are registered options, not hardwired pipeline stages. Examples: outcome-driven, problem-driven, research-driven, evidence-driven, requirements-driven, behavior-driven/BDD, design-driven, test-driven/TDD, model-driven, data-driven, risk-driven, capability-driven and experiment-driven. Combine or skip them proportionately. The workspace should explain why a method is recommended and let the user override it without losing source context.
+
+Resources are also a selectable catalog: open source, internal reusable capabilities, commercial services, APIs, deterministic tools, AI, human expertise and custom building. Compare fitness, license, provenance, security, cost, maintenance, integration effort, accessibility and verification, rather than assuming open source always wins.
 
 Use the SAME stable work item identifier in all perspectives. Navigating from evidence to capability, requirement, user journey, UI component, API, test, decision, risk, plan or opportunity must preserve the anchor and a return path. Support deep-linking to work item + artifact + anchor. Distinguish last visited place from last meaningful unfinished item.
 
@@ -33,7 +38,7 @@ From extracted summary: 3,459 tracked files, 52 registered screen IDs, 23 CURATE
 The extraction reports 1,157 Python AST parses with 0 parse errors, but native build and UI tests NOT RUN. Neither 15,053 symbols nor 447 tool names represent independently validated user-facing capabilities.
 
 ## Key screen features
-- Always-on resume hero and side rail with exact item, last active perspective and editable next action.
+- Customizable home, with accessible resume/restore affordance showing exact item, last active perspective and editable next action; resume must be discoverable but need not dominate every screen.
 - Source-backed capability register, filter, source links and static source-to-screen mapping.
 - Full registered screen inventory with visible nonmapped cases.
 - Graph or adjacency view for source → component → capability → requirement → behavior → UI → API/data → test → evidence; user can open any node.
@@ -46,7 +51,7 @@ The extraction reports 1,157 Python AST parses with 0 parse errors, but native b
 Durable versioned checkpoints and conflict resolution; multi-device sync only after backend is proven. Local storage is an offline demo fallback, not durable cross-device sync. Clear visually encoded status plus text (never color alone); keyboard and screen-reader accessible; responsive mobile/tablet; signing-video-friendly layouts where applicable; visual alerts, no audio-only cues. Saved progress must not be mistaken for evidence or approval.
 
 ## MVP priorities
-P0: real item import, stable IDs, persistent resume, source evidence, screen/capability mapping, unknown markers.
+P0: real item import, stable IDs, user-chosen default view, accessible resume and recovery, source evidence, screen/capability mapping, unknown markers.
 P1: review and planning handoffs, accessible graph, dynamic runtime capture, scenario/test traceability.
 P2: source adapters, cross-device synchronization, multi-project permissions and automation.
 Do not add elaborate workflow engines or proprietary graph databases just to draw links; prove a working vertical slice first.
