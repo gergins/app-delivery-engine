@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Snake · ADE reusable slice</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark}body{background:#101827;color:#f5f8ff;display:grid;place-items:center;min-height:100vh;margin:0;padding:12px;box-sizing:border-box}
+main{width:min(100%,500px);text-align:center}canvas{display:block;width:100%;aspect-ratio:1;background:#172b2b;border:2px solid #5b9b87;border-radius:12px;touch-action:none}
+button{background:#284b50;color:white;border:1px solid #78ad9e;border-radius:9px;min-height:48px;min-width:58px;font:inherit;cursor:pointer}button:focus-visible{outline:3px solid #fcd34d}
+.controls{display:grid;grid-template-columns:repeat(3,64px);justify-content:center;gap:6px;margin:12px auto}.controls button:first-child{grid-column:2}.controls button:nth-child(2){grid-column:1;grid-row:2}.controls button:nth-child(3){grid-column:2;grid-row:2}.controls button:nth-child(4){grid-column:3;grid-row:2}
+.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}p{line-height:1.4}
+</style>
+<main><h1>Snake</h1><p id="status" role="status" aria-live="polite">Score: 0</p><canvas id="board" width="480" height="480" aria-label="Snake board, 16 by 16 cells"></canvas>
+<div class="controls" aria-label="Direction controls"><button data-dir="up" aria-label="Up">↑</button><button data-dir="left" aria-label="Left">←</button><button data-dir="down" aria-label="Down">↓</button><button data-dir="right" aria-label="Right">→</button></div>
+<div class="actions"><button id="pause">Pause</button><button id="restart">Restart</button></div><p>Use arrow keys, WASD, swipe or direction buttons. Eat green squares. Avoid walls and yourself.</p></main>
+<script type="module">
+import { initialState, step, turn } from './snake-core.mjs';
+let state=initialState(),paused=false,pending=null;
+const canvas=document.getElementById('board'),ctx=canvas.getContext('2d'),status=document.getElementById('status'),pause=document.getElementById('pause');
+function render(){
+ const cell=canvas.width/state.size;ctx.fillStyle='#172b2b';ctx.fillRect(0,0,canvas.width,canvas.height);
+ ctx.fillStyle='#f8c45a';if(state.food)ctx.fillRect(state.food.x*cell+3,state.food.y*cell+3,cell-6,cell-6);
+ ctx.fillStyle='#6ee7b7';for(const p of state.snake)ctx.fillRect(p.x*cell+2,p.y*cell+2,cell-4,cell-4);
+ status.textContent='Score: '+state.score+(state.status==='won'?' · You win!':state.status==='gameover'?' · Game over!':paused?' · Paused':'');
+ pause.textContent=paused?'Resume':'Pause';
+}
+function choose(d){if(pending===null)pending=d}
+function tick(){if(paused||state.status!=='playing')return;if(pending!==null){state=turn(state,pending);pending=null}state=step(state);render()}
+const keys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',a:'left',s:'down',d:'right'};
+document.addEventListener('keydown',e=>{const d=keys[e.key];if(d){e.preventDefault();choose(d)}else if(e.key===' '){e.preventDefault();toggle()}});
+document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.dir)));
+function toggle(){if(state.status==='playing'){paused=!paused;render()}}pause.addEventListener('click',toggle);
+document.getElementById('restart').addEventListener('click',()=>{state=initialState();paused=false;pending=null;render()});
+let start=null;canvas.addEventListener('pointerdown',e=>{start={x:e.clientX,y:e.clientY}});
+canvas.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.max(Math.abs(dx),Math.abs(dy))<15)return;choose(Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up')});
+render();setInterval(tick,150);
+</script></html>

@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { initialState, nextFood, step, turn } from './snake-core.mjs';
+test('starts with valid deterministic state',()=>{const s=initialState();assert.equal(s.status,'playing');assert.equal(s.score,0);assert.equal(s.snake.length,1)});
+test('rejects reverse direction',()=>{const s=initialState();assert.equal(turn(s,'left'),s)});
+test('eats, grows and scores',()=>{const s=step(initialState(),()=>0);assert.equal(s.score,1);assert.equal(s.snake.length,2)});
+test('wall collision ends game',()=>{let s=initialState(4);s={...s,food:{x:0,y:0}};for(let i=0;i<3;i++)s=step(s);assert.equal(s.status,'gameover')});
+test('does not spawn food on snake',()=>{assert.deepEqual(nextFood(2,[{x:0,y:0},{x:1,y:0},{x:0,y:1}],()=>0),{x:1,y:1})});
+test('full board yields no food',()=>{assert.equal(nextFood(1,[{x:0,y:0}]),null)});
+test('rejects invalid board size and random',()=>{assert.throws(()=>initialState(3));assert.throws(()=>nextFood(4,[],()=>1))});
+test('collision with body ends game',()=>{const s={size:5,snake:[{x:2,y:2},{x:1,y:2},{x:1,y:3},{x:2,y:3}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step(s).status,'gameover')});
+test('moving into vacated tail cell is legal',()=>{const s={size:5,snake:[{x:2,y:2},{x:2,y:3},{x:1,y:3},{x:1,y:2}],direction:'left',food:{x:4,y:4},score:3,status:'playing'};assert.equal(step(s).status,'playing')});
