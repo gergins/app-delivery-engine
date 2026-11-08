@@ -9,7 +9,7 @@ from ade.method_selection import select_method
 
 EXPECTED_REPO = "gergins/engineering-knowledge-registry"
 OWAC_ID = "method-outcome-to-working-app-v1"
-SHA = re.compile(r"[a-f0-9]{40}\\Z")
+SHA = re.compile(r"[a-f0-9]{40}\Z")
 
 
 def recommend_owac(*, method_record, selected_method_id, source_repo,
